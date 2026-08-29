@@ -1,0 +1,78 @@
+---
+import Layout from './Layout.astro';
+import type { CollectionEntry } from 'astro:content';
+import { slugify } from '../utils/slug';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+  translationHref?: string;
+}
+
+const { entry, translationHref } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, lang, heroImage } = entry.data;
+
+const formattedPubDate = pubDate.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const formattedUpdatedDate = updatedDate?.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
+---
+
+<Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Blog' : 'Blog'}`} description={description} translationHref={translationHref}>
+  <article class="container prose post">
+    <header class="post-header">
+      {heroImage && <img src={heroImage.src} alt="" class="hero" />}
+      <h1>{title}</h1>
+      <div class="meta">
+        <time datetime={pubDate.toISOString()}>{formattedPubDate}</time>
+        {updatedDate && <span>· {updatedLabel} {formattedUpdatedDate}</span>}
+      </div>
+      <div class="tags">
+        {tags.map((tag) => (
+          <a class="tag-pill" href={`/${lang}/blog/tags/${slugify(tag)}/`}>
+            {tag}
+          </a>
+        ))}
+      </div>
+    </header>
+    <div class="body">
+      <slot />
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .post {
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .hero {
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.8rem;
+  }
+
+  .body {
+    line-height: 1.75;
+  }
+
+  .body :global(h2) {
+    margin-top: 2em;
+  }
+</style>

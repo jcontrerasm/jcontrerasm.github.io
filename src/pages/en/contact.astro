@@ -1,0 +1,44 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SITE } from '../../config';
+---
+
+<Layout
+  lang="en"
+  title={`Contact — ${SITE.name}`}
+  description="Get in touch via LinkedIn or GitHub."
+  translationHref="/es/contacto/"
+>
+  <section class="container contact">
+    <h1>Contact</h1>
+    <p class="lede">
+      The fastest way to reach me is on LinkedIn. You can also check out my work on GitHub.
+    </p>
+    <div class="links">
+      <a class="btn btn-accent" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
+        Message me on LinkedIn
+      </a>
+      <a class="btn" href={SITE.github} target="_blank" rel="noopener noreferrer">
+        View GitHub
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .contact {
+    padding: 4rem 1.5rem;
+    max-width: var(--content-width);
+  }
+
+  .lede {
+    color: var(--color-text-secondary);
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+</style>

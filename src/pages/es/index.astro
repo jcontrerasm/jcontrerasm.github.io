@@ -1,0 +1,164 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FocusAreaCard from '../../components/FocusAreaCard.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../../config';
+
+const posts = (await getCollection('blog', (p) => p.data.lang === 'es' && !p.data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const focusAreas = [
+  {
+    title: 'Arquitectura DevSecOps',
+    description: 'Integro seguridad en el ciclo de vida del software, desde el diseño hasta producción.',
+  },
+  {
+    title: 'Cultura de Ingeniería',
+    description: 'Lidero iniciativas de transformación cultural para equipos de desarrollo.',
+  },
+  {
+    title: 'Métricas de Ingeniería',
+    description: 'Defino y sigo métricas técnicas que orientan decisiones dentro de la organización.',
+  },
+  {
+    title: 'IA aplicada a Seguridad y Ops',
+    description: 'Uso agentes de IA para acelerar la remediación de vulnerabilidades y otros flujos de trabajo.',
+  },
+];
+---
+
+<Layout
+  lang="es"
+  title={`${SITE.name} — Arquitecto DevSecOps`}
+  description="Arquitecto DevSecOps enfocado en seguridad, cultura de ingeniería, métricas e IA aplicada."
+  translationHref="/en/"
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <p class="eyebrow hero-eyebrow">Arquitecto DevSecOps</p>
+      <h1 class="hero-title">{SITE.name}</h1>
+      <p class="lede">
+        Integro seguridad, cultura de ingeniería y datos en el ciclo de vida del software. Comparto
+        lo que aprendo en el camino en el blog.
+      </p>
+      <div class="cta">
+        <a class="btn btn-accent" href="/es/blog/">Leer el blog</a>
+        <a class="btn btn-ghost" href="/es/contacto/">Contacto</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container focus-grid">
+    {focusAreas.map((area, index) => (
+      <FocusAreaCard title={area.title} description={area.description} index={index} />
+    ))}
+  </section>
+
+  <section class="container bio">
+    <h2>Sobre mí</h2>
+    <p>
+      Actualmente lidero iniciativas de transformación de cultura de ingeniería, seguimiento de
+      métricas técnicas dentro de la compañía, y proyectos de IA aplicada — incluyendo el uso de
+      GitHub Copilot en modo agente para remediar masivamente vulnerabilidades detectadas por
+      Dependabot, caso que compartí en un evento conjunto de Credicorp, Microsoft y GitHub.
+    </p>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="container latest">
+      <h2>Últimos artículos</h2>
+      <div class="post-grid">
+        {posts.map((post) => (
+          <BlogPostCard
+            href={`/es/blog/${post.id.replace(/^es\//, '')}/`}
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+            lang="es"
+          />
+        ))}
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .hero {
+    background: var(--hero-bg);
+    color: var(--hero-ink);
+  }
+
+  .hero-inner {
+    padding: clamp(64px, 8vh, 110px) 1.5rem 80px;
+    max-width: var(--content-width);
+  }
+
+  .hero-eyebrow {
+    color: var(--hero-ink-3);
+    padding-bottom: 14px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid var(--hero-rule);
+  }
+
+  .hero-title {
+    font-size: clamp(40px, 5.4vw, 74px);
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    margin: 0 0 30px;
+    color: var(--hero-ink);
+  }
+
+  .lede {
+    color: var(--hero-ink-2);
+    font-size: 1.15rem;
+    max-width: 34rem;
+  }
+
+  .cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .cta .btn-accent {
+    background: var(--hero-ink);
+    color: var(--hero-bg);
+    border-color: var(--hero-ink);
+  }
+
+  .cta .btn-ghost {
+    border-color: var(--hero-rule);
+    color: var(--hero-ink-2);
+  }
+
+  .cta .btn-ghost:hover {
+    border-color: var(--hero-ink);
+    color: var(--hero-ink);
+  }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 3rem 0;
+  }
+
+  .bio {
+    max-width: var(--content-width);
+    padding-bottom: 3rem;
+  }
+
+  .latest {
+    padding-bottom: 4rem;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  index: number;
+}
+
+const { title, description, index } = Astro.props;
+const num = String(index + 1).padStart(2, '0');
+---
+
+<div class="card focus-card">
+  <span class="focus-num">{num}</span>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</div>
+
+<style>
+  .focus-card {
+    position: relative;
+    border-top: 2px solid var(--color-border-strong);
+  }
+
+  .focus-card:hover {
+    border-top-color: var(--color-accent);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+
+  .focus-num {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.8rem;
+  }
+
+  .focus-card h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .focus-card p {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 0.92rem;
+  }
+</style>

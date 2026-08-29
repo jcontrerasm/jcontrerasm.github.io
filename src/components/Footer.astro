@@ -1,0 +1,56 @@
+---
+import { SITE } from '../config';
+
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+const year = new Date().getFullYear();
+const text = lang === 'es' ? 'Construido con Astro.' : 'Built with Astro.';
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="copyright">&copy; {year} {SITE.name}</p>
+    <div class="links">
+      <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href={SITE.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+    <p class="note">{text}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    margin-top: 5rem;
+    background: var(--color-surface-raised);
+  }
+
+  .footer-inner {
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    color: var(--color-text-secondary);
+  }
+
+  .copyright {
+    margin: 0;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .note {
+    margin: 0;
+  }
+</style>

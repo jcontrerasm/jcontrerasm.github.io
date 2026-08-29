@@ -1,0 +1,63 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  lang: 'es' | 'en';
+}
+
+const { href, title, description, pubDate, tags, lang } = Astro.props;
+const formattedDate = pubDate.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<a class="card post-card" href={href}>
+  <time class="post-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
+  <h3>{title}</h3>
+  <p>{description}</p>
+  <div class="tags">
+    {tags.map((tag) => (
+      <span class="tag-pill">{tag}</span>
+    ))}
+  </div>
+</a>
+
+<style>
+  .post-card {
+    display: block;
+    color: var(--color-text-primary);
+  }
+
+  .post-card:hover {
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+  }
+
+  .post-card h3 {
+    margin: 0.4rem 0;
+    font-size: 1.1rem;
+  }
+
+  .post-card p {
+    color: var(--color-text-secondary);
+    margin: 0 0 0.8rem;
+    font-size: 0.92rem;
+  }
+
+  .tags {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FocusAreaCard from '../../components/FocusAreaCard.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../../config';
+
+const posts = (await getCollection('blog', (p) => p.data.lang === 'en' && !p.data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const focusAreas = [
+  {
+    title: 'DevSecOps Architecture',
+    description: 'Embedding security across the software lifecycle, from design through production.',
+  },
+  {
+    title: 'Engineering Culture',
+    description: 'Leading cultural transformation initiatives across engineering teams.',
+  },
+  {
+    title: 'Engineering Metrics',
+    description: 'Defining and tracking technical metrics that inform decisions across the org.',
+  },
+  {
+    title: 'AI for Security & Ops',
+    description: 'Using AI agents to accelerate vulnerability remediation and other workflows.',
+  },
+];
+---
+
+<Layout
+  lang="en"
+  title={`${SITE.name} — DevSecOps Architect`}
+  description="DevSecOps Architect focused on security, engineering culture, metrics, and applied AI."
+  translationHref="/es/"
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <p class="eyebrow hero-eyebrow">DevSecOps Architect</p>
+      <h1 class="hero-title">{SITE.name}</h1>
+      <p class="lede">
+        I bring security, engineering culture, and data together across the software lifecycle. I
+        share what I learn along the way on the blog.
+      </p>
+      <div class="cta">
+        <a class="btn btn-accent" href="/en/blog/">Read the blog</a>
+        <a class="btn btn-ghost" href="/en/contact/">Contact</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container focus-grid">
+    {focusAreas.map((area, index) => (
+      <FocusAreaCard title={area.title} description={area.description} index={index} />
+    ))}
+  </section>
+
+  <section class="container bio">
+    <h2>About me</h2>
+    <p>
+      I currently lead engineering culture transformation initiatives, technical metrics tracking
+      across the company, and applied AI projects — including using GitHub Copilot's agent mode
+      to mass-remediate vulnerabilities flagged by Dependabot, a case I presented at a joint
+      Credicorp, Microsoft, and GitHub event.
+    </p>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="container latest">
+      <h2>Latest posts</h2>
+      <div class="post-grid">
+        {posts.map((post) => (
+          <BlogPostCard
+            href={`/en/blog/${post.id.replace(/^en\//, '')}/`}
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+            lang="en"
+          />
+        ))}
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .hero {
+    background: var(--hero-bg);
+    color: var(--hero-ink);
+  }
+
+  .hero-inner {
+    padding: clamp(64px, 8vh, 110px) 1.5rem 80px;
+    max-width: var(--content-width);
+  }
+
+  .hero-eyebrow {
+    color: var(--hero-ink-3);
+    padding-bottom: 14px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid var(--hero-rule);
+  }
+
+  .hero-title {
+    font-size: clamp(40px, 5.4vw, 74px);
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    margin: 0 0 30px;
+    color: var(--hero-ink);
+  }
+
+  .lede {
+    color: var(--hero-ink-2);
+    font-size: 1.15rem;
+    max-width: 34rem;
+  }
+
+  .cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .cta .btn-accent {
+    background: var(--hero-ink);
+    color: var(--hero-bg);
+    border-color: var(--hero-ink);
+  }
+
+  .cta .btn-ghost {
+    border-color: var(--hero-rule);
+    color: var(--hero-ink-2);
+  }
+
+  .cta .btn-ghost:hover {
+    border-color: var(--hero-ink);
+    color: var(--hero-ink);
+  }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 3rem 0;
+  }
+
+  .bio {
+    max-width: var(--content-width);
+    padding-bottom: 3rem;
+  }
+
+  .latest {
+    padding-bottom: 4rem;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+</style>

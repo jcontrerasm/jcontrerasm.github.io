@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPost from '../../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', (p) => p.id.startsWith('es/') && !p.data.draft);
+  const enPosts = await getCollection('blog', (p) => p.id.startsWith('en/') && !p.data.draft);
+  const enBasenames = new Set(enPosts.map((p) => p.id.replace(/^en\//, '')));
+
+  return posts.map((entry) => {
+    const slug = entry.id.replace(/^es\//, '');
+    const translationHref = enBasenames.has(slug) ? `/en/blog/${slug}/` : '/en/blog/';
+    return { params: { slug }, props: { entry, translationHref } };
+  });
+}
+
+const { entry, translationHref } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BlogPost entry={entry} translationHref={translationHref}>
+  <Content />
+</BlogPost>
