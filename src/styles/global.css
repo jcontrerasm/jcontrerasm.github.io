@@ -40,6 +40,25 @@
 
   --content-width: 46rem;
   --page-width: 72rem;
+
+  /* palette: Dark 2026 terminal ANSI colors, available to pick from */
+  --palette-black: #000000;
+  --palette-red: #cd3131;
+  --palette-green: #0dbc79;
+  --palette-yellow: #e5e510;
+  --palette-blue: #2472c8;
+  --palette-magenta: #bc3fbc;
+  --palette-cyan: #11a8cd;
+  --palette-white: #e5e5e5;
+  --palette-bright-black: #666666;
+  --palette-bright-red: #f14c4c;
+  --palette-bright-green: #23d18b;
+  --palette-bright-yellow: #f5f543;
+  --palette-bright-blue: #3b8eea;
+  --palette-bright-magenta: #d670d6;
+  --palette-bright-cyan: #29b8db;
+  --palette-bright-white: #e5e5e5;
+  --palette-amatista: #9e80e5;
 }
 
 @media (prefers-color-scheme: dark) {
