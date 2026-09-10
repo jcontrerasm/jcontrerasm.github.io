@@ -3,8 +3,18 @@ import Layout from '../../layouts/Layout.astro';
 import FocusAreaCard from '../../components/FocusAreaCard.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
 import DevSecOpsPipeline from '../../components/DevSecOpsPipeline.astro';
+import HeroTerminal from '../../components/HeroTerminal.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../../config';
+
+const terminalLines = [
+  { type: 'cmd', text: 'gh copilot agent run --fix-dependabot' },
+  { type: 'out', text: 'escaneando 482 dependencias...' },
+  { type: 'out', text: '7 críticas, 12 altas detectadas' },
+  { type: 'ok', text: 'lockfile parcheado ✓' },
+  { type: 'ok', text: 'tests: 128/128 ✓' },
+  { type: 'ok', text: 'PR #482 abierta para revisión ✓' },
+] as const;
 
 const posts = (await getCollection('blog', (p) => p.data.lang === 'es' && !p.data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -39,18 +49,23 @@ const focusAreas = [
   <section class="hero">
     <DevSecOpsPipeline />
     <div class="container hero-inner">
-      <img class="hero-photo" src="/images/profile.jpeg" alt={SITE.name} width="220" height="220" />
-      <div class="hero-text">
-        <p class="eyebrow hero-eyebrow">Arquitecto DevSecOps</p>
-        <h1 class="hero-title">{SITE.name}</h1>
-        <p class="lede">
-          Integro seguridad, cultura de ingeniería y datos en el ciclo de vida del software. Comparto
-          lo que aprendo en el camino en el blog.
-        </p>
-        <div class="cta">
-          <a class="btn btn-accent" href="/es/blog/">Leer el blog</a>
-          <a class="btn btn-ghost" href="/es/contacto/">Contacto</a>
+      <div class="hero-identity">
+        <img class="hero-photo" src="/images/profile.jpeg" alt={SITE.name} width="220" height="220" />
+        <div class="hero-text">
+          <p class="eyebrow hero-eyebrow">Arquitecto DevSecOps</p>
+          <h1 class="hero-title">{SITE.name}</h1>
+          <p class="lede">
+            Integro seguridad, cultura de ingeniería y datos en el ciclo de vida del software. Comparto
+            lo que aprendo en el camino en el blog.
+          </p>
+          <div class="cta">
+            <a class="btn btn-accent" href="/es/blog/">Leer el blog</a>
+            <a class="btn btn-ghost" href="/es/contacto/">Contacto</a>
+          </div>
         </div>
+      </div>
+      <div class="hero-terminal-wrap">
+        <HeroTerminal title="remediate.sh" lines={terminalLines} />
       </div>
     </div>
   </section>
@@ -103,10 +118,19 @@ const focusAreas = [
     z-index: 1;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: clamp(2rem, 5vw, 3.5rem);
     padding: clamp(64px, 8vh, 110px) 1.5rem 130px;
-    max-width: var(--content-width);
+    max-width: var(--page-width);
     margin: 0;
+  }
+
+  .hero-identity {
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    flex-shrink: 0;
+    max-width: var(--content-width);
   }
 
   .hero-photo {
@@ -124,11 +148,28 @@ const focusAreas = [
     min-width: 0;
   }
 
+  .hero-terminal-wrap {
+    flex: 1;
+    min-width: 280px;
+    max-width: 380px;
+  }
+
+  @media (max-width: 900px) {
+    .hero-terminal-wrap {
+      display: none;
+    }
+  }
+
   @media (max-width: 640px) {
     .hero-inner {
       flex-direction: column;
       align-items: flex-start;
       padding-bottom: 100px;
+    }
+
+    .hero-identity {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 
