@@ -14,6 +14,9 @@ const terminalLines = [
   { type: 'ok', text: 'lockfile parcheado ✓' },
   { type: 'ok', text: 'tests: 128/128 ✓' },
   { type: 'ok', text: 'PR #482 abierta para revisión ✓' },
+  { type: 'cmd', text: 'kubectl rollout status deploy/api' },
+  { type: 'out', text: 'esperando a que termine el rollout...' },
+  { type: 'ok', text: 'deployment "api" desplegado con éxito ✓' },
 ] as const;
 
 const posts = (await getCollection('blog', (p) => p.data.lang === 'es' && !p.data.draft))
@@ -121,7 +124,7 @@ const focusAreas = [
     justify-content: space-between;
     gap: clamp(2rem, 5vw, 3.5rem);
     padding: clamp(64px, 8vh, 110px) 1.5rem 130px;
-    max-width: var(--page-width);
+    max-width: none;
     margin: 0;
   }
 
@@ -130,7 +133,7 @@ const focusAreas = [
     align-items: center;
     gap: clamp(2rem, 5vw, 3.5rem);
     flex-shrink: 0;
-    max-width: var(--content-width);
+    max-width: 34rem;
   }
 
   .hero-photo {
@@ -150,8 +153,8 @@ const focusAreas = [
 
   .hero-terminal-wrap {
     flex: 1;
-    min-width: 280px;
-    max-width: 380px;
+    min-width: 300px;
+    max-width: 640px;
   }
 
   @media (max-width: 900px) {

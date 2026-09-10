@@ -19,9 +19,9 @@ const { title, lines } = Astro.props;
     <span class="dot dot-green"></span>
     <span class="hero-terminal-title">{title}</span>
   </div>
-  <pre class="hero-terminal-body"><code>{lines.map((line) => (
-    <span class={`line line-${line.type}`}>{line.type === 'cmd' ? '$ ' : '  '}{line.text}</span>
-  ))}<span class="cursor" aria-hidden="true"></span></code></pre>
+  <pre class="hero-terminal-body"><code>{lines.map((line, i) => (
+    <span class={`line line-${line.type}`}>{line.type === 'cmd' ? '$ ' : '  '}{line.text}{i === lines.length - 1 ? <span class="cursor" aria-hidden="true"></span> : null}</span>
+  ))}</code></pre>
 </div>
 
 <style>
@@ -68,7 +68,7 @@ const { title, lines } = Astro.props;
 
   .hero-terminal-body {
     margin: 0;
-    padding: 1rem 1.1rem 1.2rem;
+    padding: 1.6rem 1.3rem 2rem;
     background: none;
     border: none;
     overflow-x: auto;
@@ -79,8 +79,8 @@ const { title, lines } = Astro.props;
     background: none;
     padding: 0;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    line-height: 1.75;
+    font-size: 0.85rem;
+    line-height: 2.15;
   }
 
   .line {
@@ -90,6 +90,10 @@ const { title, lines } = Astro.props;
 
   .line-cmd {
     color: var(--hero-ink);
+  }
+
+  .line-cmd:not(:first-child) {
+    margin-top: 1.4em;
   }
 
   .line-out {
