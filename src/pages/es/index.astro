@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import FocusAreaCard from '../../components/FocusAreaCard.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
+import DevSecOpsPipeline from '../../components/DevSecOpsPipeline.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../../config';
 
@@ -36,6 +37,7 @@ const focusAreas = [
   translationHref="/en/"
 >
   <section class="hero">
+    <DevSecOpsPipeline />
     <div class="container hero-inner">
       <p class="eyebrow hero-eyebrow">Arquitecto DevSecOps</p>
       <h1 class="hero-title">{SITE.name}</h1>
@@ -87,11 +89,15 @@ const focusAreas = [
 
 <style>
   .hero {
+    position: relative;
+    overflow: hidden;
     background: var(--hero-bg);
     color: var(--hero-ink);
   }
 
   .hero-inner {
+    position: relative;
+    z-index: 1;
     padding: clamp(64px, 8vh, 110px) 1.5rem 80px;
     max-width: var(--content-width);
   }

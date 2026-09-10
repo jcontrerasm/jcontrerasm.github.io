@@ -66,6 +66,7 @@ Nota: las rutas de contacto tienen slugs distintos por idioma (`contacto` vs `co
 - `Header.astro` — nav + `LanguageSwitcher.astro`.
 - `Footer.astro` — enlaces sociales (LinkedIn, GitHub) desde `src/config.ts`.
 - `BlogPostCard.astro`, `FocusAreaCard.astro` — tarjetas reutilizables.
+- `DevSecOpsPipeline.astro` — animación de canvas en el hero de Inicio (cinta de pipeline CI/CD con escaneo de seguridad). Ver detalle en [devsecops-hero-animation.md](./devsecops-hero-animation.md).
 - `src/config.ts` — única fuente de verdad para nombre del sitio, URLs de LinkedIn/GitHub, y estructura de navegación por idioma (`SITE`, `NAV`).
 - `src/utils/slug.ts` — `slugify()` usado para las URLs de tags.
 

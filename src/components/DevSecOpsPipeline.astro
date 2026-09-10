@@ -1,0 +1,215 @@
+---
+// Animated canvas: a CI/CD pipeline where a security scan sweeps through each
+// stage, "locking" it as it passes — a visual shorthand for DevSecOps.
+---
+
+<canvas class="devsecops-canvas" aria-hidden="true"></canvas>
+
+<style>
+  .devsecops-canvas {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    display: block;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 45%, black 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 45%, black 100%);
+  }
+
+  @media (max-width: 640px) {
+    .devsecops-canvas {
+      height: 72px;
+    }
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.devsecops-canvas');
+
+  // pending (unscanned) = amber, scan beam / data flow = cyan, secured = green
+  const PENDING = '224,150,80';
+  const SCAN = '96,200,214';
+  const SECURE = '95,199,146';
+
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const stages = ['SPEC', 'CODE', 'BUILD', 'TEST', 'SCAN', 'DEPLOY'];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let width = 0;
+    let height = 0;
+    let nodes: { label: string; x: number; y: number; secured: boolean; pulse: number }[] = [];
+    let particles: { seg: number; t: number; speed: number }[] = [];
+    let scanX = -200;
+    let raf: number | null = null;
+    let running = false;
+
+    function resize() {
+      const rect = canvas!.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas!.width = Math.round(width * dpr);
+      canvas!.height = Math.round(height * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      layout();
+    }
+
+    function layout() {
+      const count = stages.length;
+      const marginX = width * 0.06;
+      const usableW = Math.max(width - marginX * 2, 1);
+      const baseY = height * 0.58;
+      const wobble = Math.min(height * 0.18, 10);
+      nodes = stages.map((label, i) => ({
+        label,
+        x: marginX + (usableW * i) / (count - 1),
+        y: baseY + Math.sin(i * 1.7) * wobble,
+        secured: reduceMotion,
+        pulse: 0,
+      }));
+      particles = Array.from({ length: 3 }, () => ({
+        seg: Math.floor(Math.random() * (count - 1)),
+        t: Math.random(),
+        speed: 0.003 + Math.random() * 0.004,
+      }));
+    }
+
+    function drawCheck(x: number, y: number, alpha: number) {
+      ctx!.save();
+      ctx!.translate(x, y);
+      ctx!.globalAlpha = alpha;
+      ctx!.strokeStyle = `rgb(${SECURE})`;
+      ctx!.lineWidth = 1.4;
+      ctx!.beginPath();
+      ctx!.arc(0, 0, 5, 0, Math.PI * 2);
+      ctx!.stroke();
+      ctx!.beginPath();
+      ctx!.moveTo(-2.4, 0.2);
+      ctx!.lineTo(-0.6, 2);
+      ctx!.lineTo(2.6, -2.2);
+      ctx!.stroke();
+      ctx!.restore();
+    }
+
+    function frame() {
+      ctx!.clearRect(0, 0, width, height);
+
+      ctx!.strokeStyle = 'rgba(189,189,184,0.28)';
+      ctx!.lineWidth = 1;
+      ctx!.beginPath();
+      nodes.forEach((n, i) => {
+        if (i === 0) ctx!.moveTo(n.x, n.y);
+        else ctx!.lineTo(n.x, n.y);
+      });
+      ctx!.stroke();
+
+      if (!reduceMotion) {
+        scanX += 1.4;
+        const cycle = width + 240;
+        const bx = (scanX % cycle) - 120;
+        if (bx < -115) {
+          nodes.forEach((n) => (n.secured = false));
+        }
+
+        const grad = ctx!.createLinearGradient(bx - 70, 0, bx + 70, 0);
+        grad.addColorStop(0, `rgba(${SCAN},0)`);
+        grad.addColorStop(0.5, `rgba(${SCAN},0.45)`);
+        grad.addColorStop(1, `rgba(${SCAN},0)`);
+        ctx!.fillStyle = grad;
+        ctx!.fillRect(bx - 70, 0, 140, height);
+
+        nodes.forEach((n) => {
+          if (!n.secured && bx > n.x) {
+            n.secured = true;
+            n.pulse = 1;
+          }
+          if (n.pulse > 0) n.pulse = Math.max(0, n.pulse - 0.02);
+        });
+
+        particles.forEach((p) => {
+          p.t += p.speed;
+          if (p.t >= 1) {
+            p.t = 0;
+            p.seg = (p.seg + 1) % (nodes.length - 1);
+          }
+          const a = nodes[p.seg];
+          const b = nodes[p.seg + 1];
+          const px = a.x + (b.x - a.x) * p.t;
+          const py = a.y + (b.y - a.y) * p.t;
+          ctx!.beginPath();
+          ctx!.fillStyle = `rgba(${SCAN},0.85)`;
+          ctx!.arc(px, py, 2, 0, Math.PI * 2);
+          ctx!.fill();
+        });
+      }
+
+      nodes.forEach((n) => {
+        if (n.secured) {
+          const glowR = 12 + n.pulse * 10;
+          const g = ctx!.createRadialGradient(n.x, n.y, 0, n.x, n.y, glowR);
+          g.addColorStop(0, `rgba(${SECURE},0.5)`);
+          g.addColorStop(1, `rgba(${SECURE},0)`);
+          ctx!.fillStyle = g;
+          ctx!.beginPath();
+          ctx!.arc(n.x, n.y, glowR, 0, Math.PI * 2);
+          ctx!.fill();
+        } else {
+          const glowR = 8;
+          const g = ctx!.createRadialGradient(n.x, n.y, 0, n.x, n.y, glowR);
+          g.addColorStop(0, `rgba(${PENDING},0.35)`);
+          g.addColorStop(1, `rgba(${PENDING},0)`);
+          ctx!.fillStyle = g;
+          ctx!.beginPath();
+          ctx!.arc(n.x, n.y, glowR, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+
+        ctx!.beginPath();
+        ctx!.arc(n.x, n.y, 4, 0, Math.PI * 2);
+        ctx!.fillStyle = n.secured ? `rgb(${SECURE})` : `rgba(${PENDING},0.85)`;
+        ctx!.fill();
+
+        if (n.secured) drawCheck(n.x, n.y - 14, 0.9);
+
+        if (width > 460) {
+          ctx!.font = '9px "JetBrains Mono Variable", monospace';
+          ctx!.fillStyle = 'rgba(189,189,184,0.6)';
+          ctx!.textAlign = 'center';
+          ctx!.fillText(n.label, n.x, n.y + 20);
+        }
+      });
+
+      if (!reduceMotion && running) raf = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      if (reduceMotion) frame();
+      else raf = requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      running = false;
+      if (raf !== null) cancelAnimationFrame(raf);
+      raf = null;
+    }
+
+    resize();
+    start();
+
+    window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    new IntersectionObserver(
+      (entries) => entries.forEach((e) => (e.isIntersecting ? start() : stop())),
+      { threshold: 0.05 }
+    ).observe(canvas);
+  }
+</script>
