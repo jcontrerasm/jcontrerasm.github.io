@@ -39,15 +39,18 @@ const focusAreas = [
   <section class="hero">
     <DevSecOpsPipeline />
     <div class="container hero-inner">
-      <p class="eyebrow hero-eyebrow">Arquitecto DevSecOps</p>
-      <h1 class="hero-title">{SITE.name}</h1>
-      <p class="lede">
-        Integro seguridad, cultura de ingeniería y datos en el ciclo de vida del software. Comparto
-        lo que aprendo en el camino en el blog.
-      </p>
-      <div class="cta">
-        <a class="btn btn-accent" href="/es/blog/">Leer el blog</a>
-        <a class="btn btn-ghost" href="/es/contacto/">Contacto</a>
+      <img class="hero-photo" src="/images/profile.jpeg" alt={SITE.name} width="220" height="220" />
+      <div class="hero-text">
+        <p class="eyebrow hero-eyebrow">Arquitecto DevSecOps</p>
+        <h1 class="hero-title">{SITE.name}</h1>
+        <p class="lede">
+          Integro seguridad, cultura de ingeniería y datos en el ciclo de vida del software. Comparto
+          lo que aprendo en el camino en el blog.
+        </p>
+        <div class="cta">
+          <a class="btn btn-accent" href="/es/blog/">Leer el blog</a>
+          <a class="btn btn-ghost" href="/es/contacto/">Contacto</a>
+        </div>
       </div>
     </div>
   </section>
@@ -98,8 +101,34 @@ const focusAreas = [
   .hero-inner {
     position: relative;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 3.5rem);
     padding: clamp(64px, 8vh, 110px) 1.5rem 80px;
     max-width: var(--content-width);
+    margin: 0;
+  }
+
+  .hero-photo {
+    flex-shrink: 0;
+    width: clamp(120px, 16vw, 180px);
+    height: clamp(120px, 16vw, 180px);
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.05);
+    border: 1px solid var(--hero-rule);
+  }
+
+  .hero-text {
+    min-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    .hero-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   .hero-eyebrow {
@@ -115,7 +144,7 @@ const focusAreas = [
     letter-spacing: -0.035em;
     line-height: 1.04;
     margin: 0 0 30px;
-    color: var(--hero-ink);
+    color: var(--palette-bright-blue);
   }
 
   .lede {

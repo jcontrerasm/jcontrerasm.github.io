@@ -50,7 +50,7 @@ schema: ({ image }) => z.object({
 | Ruta | Descripción |
 |---|---|
 | `/` | Redirect automático de Astro a `/es/` |
-| `/es/`, `/en/` | Inicio/Sobre mí — hero, 4 tarjetas de áreas de foco, bio, teaser de últimos posts |
+| `/es/`, `/en/` | Inicio/Sobre mí — hero (foto de perfil + nombre + lede, ver [hero-profile-photo.md](./hero-profile-photo.md)), 4 tarjetas de áreas de foco, bio, teaser de últimos posts |
 | `/es/blog/`, `/en/blog/` | Índice del blog, ordenado por `pubDate` desc |
 | `/es/blog/[slug]/`, `/en/blog/[slug]/` | Post individual |
 | `/es/blog/tags/[tag]/`, `/en/blog/tags/[tag]/` | Filtro estático por tag — el `[tag]` de la URL es el **slug** del tag (ver `src/utils/slug.ts`), no el label original (evita espacios/acentos en la URL) |
