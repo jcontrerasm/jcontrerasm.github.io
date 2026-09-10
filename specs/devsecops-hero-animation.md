@@ -39,10 +39,10 @@ Es la única parte del sitio con más de un acento de color (el resto del diseñ
 
 La primera versión cubría todo el hero como fondo (canvas `inset: 0`, nodos distribuidos en el eje vertical medio, con una máscara CSS horizontal para atenuar el lado del texto). Al verificarla con capturas de pantalla (desktop y mobile), la línea del pipeline y las etiquetas de las etapas quedaban cruzando el título y el párrafo (`lede`), compitiendo con el texto principal — especialmente en mobile, donde el hero es más angosto y el bloque de texto ocupa casi todo el ancho.
 
-Se rediseñó como una **franja fija en la parte inferior del hero** (`position: absolute; left/right: 0; bottom: 0; height: 100px` desktop, `72px` en `max-width: 640px`), con `mask-image` en gradiente vertical para que el borde superior de la cinta se difumine en vez de cortar en seco. Esto:
+Se rediseñó como una **franja fija en la parte inferior del hero** (`position: absolute; left/right: 0; bottom: 24px; height: 100px` desktop, `bottom: 16px; height: 72px` en `max-width: 640px`), con `mask-image` en gradiente vertical para que el borde superior de la cinta se difumine en vez de cortar en seco. Esto:
 - Elimina cualquier colisión con el texto en cualquier ancho de viewport, sin depender de calcular el ancho del bloque de texto.
 - Funciona igual en desktop y mobile sin lógica condicional de layout adicional.
-- Se apoya en el padding-bottom que el hero ya reservaba (`.hero-inner { padding: ... 80px }`), que resultó suficiente como colchón entre los CTA y la cinta.
+- Deja un margen explícito respecto al borde inferior del `.hero` (`bottom: 24px`/`16px` en vez de `0`) y respecto a los CTA de arriba, vía el padding-bottom de `.hero-inner` (`130px` desktop, `100px` en `max-width: 640px`). El valor original (cinta pegada al borde con `bottom: 0` y `.hero-inner` con `80px` de padding-bottom) dejaba la animación muy pegada tanto al borde inferior del hero como a los botones CTA — feedback directo del usuario ("necesito que la animación tenga un margen arriba y abajo ya que está muy pegado al borde y botones superiores"), corregido aumentando ambos valores.
 
 ## Comportamiento técnico
 
@@ -76,6 +76,7 @@ Registro de cómo evolucionó esta animación después de la primera versión, c
 | 2 | Ícono de nodo asegurado: candado → check dentro de un círculo | Feedback directo: "el icono de candado no me convence". Un check comunica mejor "pasó el escaneo/validado" que "bloqueado", que es semánticamente más preciso para lo que representa el evento (una etapa que superó el scan, no un secreto guardado bajo llave). |
 | 3 | Paleta monocromática (grises + un acento azul) → paleta semántica de 3 colores | Pedido explícito de "dale algo de color a la animación". Se optó por color con significado (ámbar=pendiente, cian=escaneo/flujo, verde=asegurado) en vez de color puramente decorativo, para mantener coherencia con el resto del sitio (acento único y restringido) sin perder la nueva expresividad. |
 | 4 | Etapa `SPEC` agregada antes de `CODE` | Surgió de una reflexión en la conversación: "según las fases en la era de los agentes no empieza en la codificación" — el ciclo de desarrollo agentic-first arranca en la especificación, no en el código. Se pidió explícitamente reflejar esa idea en la animación (`"refleja eso en la animación"`), así que el pipeline visual ahora empieza en `SPEC`, alineado con la práctica real de este repo (`Constitution.md` + `specs/`). |
+| 5 | Margen arriba y abajo de la cinta (`bottom: 0` → `24px`/`16px` mobile; `.hero-inner` padding-bottom `80px` → `130px`/`100px` mobile) | Feedback directo: "necesito que la animación tenga un margen arriba y abajo ya que está muy pegado al borde y botones superiores". La cinta quedaba tocando tanto el borde inferior del hero como los CTA de arriba; se separó de ambos. |
 
 Cada iteración se verificó de nuevo con el mismo procedimiento que la sección de Verificación (Playwright headless en desktop/mobile/reduced-motion/ambos idiomas + `astro check`) antes de darse por cerrada.
 
