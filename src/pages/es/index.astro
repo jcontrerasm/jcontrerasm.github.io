@@ -1,11 +1,19 @@
 ---
+import fs from 'node:fs';
 import Layout from '../../layouts/Layout.astro';
 import FocusAreaCard from '../../components/FocusAreaCard.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
 import DevSecOpsPipeline from '../../components/DevSecOpsPipeline.astro';
 import HeroTerminal from '../../components/HeroTerminal.astro';
+import PhotoCarousel from '../../components/PhotoCarousel.astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../../config';
+
+const imagesDir = new URL('../../../public/images/', import.meta.url);
+const galleryImages = fs
+  .readdirSync(imagesDir)
+  .filter((file) => file.startsWith('gallery_'))
+  .sort();
 
 const terminalLines = [
   { type: 'cmd', text: 'gh copilot agent run --fix-dependabot' },
@@ -73,20 +81,33 @@ const focusAreas = [
     </div>
   </section>
 
+  <section class="container bio">
+    <div class="bio-text">
+      <h2>Sobre mí</h2>
+      <p>
+        Actualmente lidero iniciativas de transformación de cultura de ingeniería, seguimiento de
+        métricas técnicas dentro de la compañía, y proyectos de IA aplicada — incluyendo el uso de
+        GitHub Copilot en modo agente para remediar masivamente vulnerabilidades detectadas por
+        Dependabot, caso que compartí en un evento conjunto de Credicorp, Microsoft y GitHub.
+      </p>
+    </div>
+
+    {galleryImages.length > 0 && (
+      <div class="bio-gallery">
+        <p class="eyebrow gallery-eyebrow">Charlas y eventos</p>
+        <PhotoCarousel
+          images={galleryImages}
+          alt="Juan Carlos Contreras dando una charla"
+          closeLabel="Cerrar"
+        />
+      </div>
+    )}
+  </section>
+
   <section class="container focus-grid">
     {focusAreas.map((area, index) => (
       <FocusAreaCard title={area.title} description={area.description} index={index} />
     ))}
-  </section>
-
-  <section class="container bio">
-    <h2>Sobre mí</h2>
-    <p>
-      Actualmente lidero iniciativas de transformación de cultura de ingeniería, seguimiento de
-      métricas técnicas dentro de la compañía, y proyectos de IA aplicada — incluyendo el uso de
-      GitHub Copilot en modo agente para remediar masivamente vulnerabilidades detectadas por
-      Dependabot, caso que compartí en un evento conjunto de Credicorp, Microsoft y GitHub.
-    </p>
   </section>
 
   {posts.length > 0 && (
@@ -124,8 +145,8 @@ const focusAreas = [
     justify-content: space-between;
     gap: clamp(2rem, 5vw, 3.5rem);
     padding: clamp(64px, 8vh, 110px) 1.5rem 130px;
-    max-width: none;
-    margin: 0;
+    max-width: var(--page-width);
+    margin: 0 auto;
   }
 
   .hero-identity {
@@ -184,7 +205,7 @@ const focusAreas = [
   }
 
   .hero-title {
-    font-size: clamp(40px, 5.4vw, 74px);
+    font-size: clamp(40px, 5.4vw, 45px);
     font-weight: 300;
     letter-spacing: -0.035em;
     line-height: 1.04;
@@ -228,8 +249,37 @@ const focusAreas = [
   }
 
   .bio {
+    max-width: var(--page-width);
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(240px, 1fr);
+    align-items: start;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding: 4rem 0 0 0;
+  }
+
+  .bio-text {
+    min-width: 0;
     max-width: var(--content-width);
-    padding-bottom: 3rem;
+  }
+
+  .bio-gallery {
+    min-width: 0;
+    max-width: 320px;
+    width: 100%;
+  }
+
+  .gallery-eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .bio {
+      grid-template-columns: 1fr;
+    }
+
+    .bio-gallery {
+      max-width: 320px;
+    }
   }
 
   .latest {
