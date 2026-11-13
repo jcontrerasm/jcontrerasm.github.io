@@ -1,8 +1,9 @@
 export const SITE = {
-  name: 'Juan Carlos Contreras',
+  name: 'Juan Carlos Contreras Meneses',
   githubUser: 'jcontrerasm',
   linkedin: 'https://www.linkedin.com/in/juan-carlos-raul-contreras-meneses/',
   github: 'https://github.com/jcontrerasm',
+  medium: 'https://medium.com/@jcontrerasmeneses',
   role: {
     es: 'Arquitecto DevSecOps',
     en: 'DevSecOps Architect',
@@ -11,13 +12,11 @@ export const SITE = {
 
 export const NAV = {
   es: [
-    { href: '/es/', label: 'Inicio' },
-    { href: '/es/blog/', label: 'Blog' },
-    { href: '/es/contacto/', label: 'Contacto' },
+    { href: '/es/', label: 'Sobre mí' },
+    { href: '/es/blog/', label: 'Artículos' },
   ],
   en: [
-    { href: '/en/', label: 'Home' },
-    { href: '/en/blog/', label: 'Blog' },
-    { href: '/en/contact/', label: 'Contact' },
+    { href: '/en/', label: 'About me' },
+    { href: '/en/blog/', label: 'Articles' },
   ],
 } as const;

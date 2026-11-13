@@ -1,0 +1,180 @@
+---
+interface Props {
+  lang: 'es' | 'en';
+  tags: string[];
+}
+
+const { lang, tags } = Astro.props;
+const uniqueTags = [...new Set(tags)].sort((a, b) => a.localeCompare(b, lang));
+const t =
+  lang === 'es'
+    ? {
+        label: 'Buscar artículos por tema',
+        placeholder: 'Buscar por tema, título o etiqueta…',
+        all: 'Todos',
+        empty: 'No se encontraron artículos para esa búsqueda.',
+        clear: 'Limpiar búsqueda',
+      }
+    : {
+        label: 'Search articles by topic',
+        placeholder: 'Search by topic, title or tag…',
+        all: 'All',
+        empty: 'No articles match your search.',
+        clear: 'Clear search',
+      };
+---
+
+<div class="blog-filter" data-blog-filter>
+  <label class="sr-only" for="blog-search">{t.label}</label>
+  <div class="search-box">
+    <input
+      id="blog-search"
+      type="search"
+      placeholder={t.placeholder}
+      autocomplete="off"
+      aria-controls="post-grid"
+    />
+  </div>
+  <div class="chips" role="group" aria-label={t.label}>
+    <button type="button" class="chip is-active" data-tag="" aria-pressed="true">{t.all}</button>
+    {uniqueTags.map((tag) => (
+      <button type="button" class="chip" data-tag={tag} aria-pressed="false">{tag}</button>
+    ))}
+  </div>
+  <p class="empty" data-empty hidden role="status">
+    {t.empty}
+    <button type="button" class="link-btn" data-clear>{t.clear}</button>
+  </p>
+</div>
+
+<script>
+  const norm = (s: string) =>
+    s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+  const root = document.querySelector<HTMLElement>('[data-blog-filter]');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('input')!;
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('.chip')];
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const clear = root.querySelector<HTMLButtonElement>('[data-clear]')!;
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-post]')];
+    let activeTag = '';
+
+    const apply = () => {
+      const q = norm(input.value);
+      let visible = 0;
+      for (const card of cards) {
+        const tags = (card.dataset.tags ?? '').split('|').filter(Boolean);
+        const matchesTag = !activeTag || tags.includes(activeTag);
+        const matchesText = !q || norm(card.dataset.search ?? '').includes(q);
+        const show = matchesTag && matchesText;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      }
+      empty.hidden = visible > 0;
+    };
+
+    input.addEventListener('input', apply);
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        activeTag = chip.dataset.tag ?? '';
+        for (const c of chips) {
+          const on = c === chip;
+          c.classList.toggle('is-active', on);
+          c.setAttribute('aria-pressed', String(on));
+        }
+        apply();
+      });
+    }
+    clear.addEventListener('click', () => {
+      input.value = '';
+      chips[0].click();
+      input.focus();
+    });
+  }
+</script>
+
+<style>
+  .blog-filter {
+    margin-top: 1.5rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  input[type='search'] {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+
+  input[type='search']:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-mid);
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    transition:
+      background 0.15s var(--ease),
+      color 0.15s var(--ease),
+      border-color 0.15s var(--ease);
+  }
+
+  .chip:hover {
+    border-color: var(--color-text-primary);
+  }
+
+  .chip.is-active {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+    border-color: var(--color-text-primary);
+  }
+
+  .chip:focus-visible,
+  .link-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .empty {
+    margin: 1.5rem 0 0;
+    color: var(--color-text-secondary);
+  }
+
+  .link-btn {
+    font: inherit;
+    color: var(--color-accent);
+    background: none;
+    border: 0;
+    padding: 0;
+    margin-left: 0.4rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>

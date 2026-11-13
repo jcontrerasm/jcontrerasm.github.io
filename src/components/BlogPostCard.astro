@@ -16,7 +16,13 @@ const formattedDate = pubDate.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-U
 });
 ---
 
-<a class="card post-card" href={href}>
+<a
+  class="card post-card"
+  href={href}
+  data-post
+  data-tags={tags.join('|')}
+  data-search={[title, description, ...tags].join(' ')}
+>
   <time class="post-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
   <h3>{title}</h3>
   <p>{description}</p>

@@ -24,7 +24,7 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString(lang === 'es' ? 'es
 const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
 ---
 
-<Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Blog' : 'Blog'}`} description={description} translationHref={translationHref}>
+<Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Artículos' : 'Articles'}`} description={description} translationHref={translationHref}>
   <article class="container prose post">
     <header class="post-header">
       {heroImage && <img src={heroImage.src} alt="" class="hero" />}

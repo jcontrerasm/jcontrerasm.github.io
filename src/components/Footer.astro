@@ -2,12 +2,12 @@
 import { SITE } from '../config';
 
 interface Props {
-  lang: 'es' | 'en';
+  lang?: 'es' | 'en';
 }
 
-const { lang } = Astro.props;
+const { lang = 'es' } = Astro.props;
+const soon = lang === 'es' ? 'Próximamente' : 'Coming soon';
 const year = new Date().getFullYear();
-const text = lang === 'es' ? 'Construido con Astro.' : 'Built with Astro.';
 ---
 
 <footer class="site-footer">
@@ -16,8 +16,9 @@ const text = lang === 'es' ? 'Construido con Astro.' : 'Built with Astro.';
     <div class="links">
       <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
       <a href={SITE.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href={SITE.medium} target="_blank" rel="noopener noreferrer">Medium</a>
+      <span class="soon" role="link" aria-disabled="true" tabindex="0"><span class="soon-label">YouTube</span><span class="soon-hover" aria-hidden="true">{soon}</span></span>
     </div>
-    <p class="note">{text}</p>
   </div>
 </footer>
 
@@ -50,7 +51,26 @@ const text = lang === 'es' ? 'Construido con Astro.' : 'Built with Astro.';
     gap: 1rem;
   }
 
-  .note {
-    margin: 0;
+  .soon {
+    display: inline-grid;
+    cursor: default;
+  }
+
+  .soon > span {
+    grid-area: 1 / 1;
+  }
+
+  .soon-hover {
+    visibility: hidden;
+  }
+
+  .soon:hover .soon-label,
+  .soon:focus-visible .soon-label {
+    visibility: hidden;
+  }
+
+  .soon:hover .soon-hover,
+  .soon:focus-visible .soon-hover {
+    visibility: visible;
   }
 </style>

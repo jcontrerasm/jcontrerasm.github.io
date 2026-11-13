@@ -1,19 +1,30 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import HeroTerminal from '../../components/HeroTerminal.astro';
 import { SITE } from '../../config';
+
+const lines = [
+  { type: 'cmd', text: 'whoami' },
+  { type: 'out', text: `${SITE.name} · ${SITE.role.es}` },
+  { type: 'cmd', text: 'contacto --canales' },
+  { type: 'out', text: 'linkedin · github · medium · youtube' },
+  { type: 'cmd', text: 'ping jcontrerasm' },
+  { type: 'ok', text: '✔ Disponible para conversar' },
+] as const;
 ---
 
 <Layout
   lang="es"
   title={`Contacto — ${SITE.name}`}
-  description="Ponte en contacto conmigo por LinkedIn o GitHub."
+  description="Ponte en contacto conmigo por LinkedIn, GitHub o Medium."
   translationHref="/en/contact/"
 >
   <section class="container contact">
+    <div class="contact-text">
     <h1>Contacto</h1>
     <p class="lede">
       La forma más directa de contactarme es por LinkedIn. También puedes revisar mis proyectos en
-      GitHub.
+      GitHub y mis artículos en Medium.
     </p>
     <div class="links">
       <a class="btn btn-accent" href={SITE.linkedin} target="_blank" rel="noopener noreferrer">
@@ -22,14 +33,57 @@ import { SITE } from '../../config';
       <a class="btn" href={SITE.github} target="_blank" rel="noopener noreferrer">
         Ver GitHub
       </a>
+      <a class="btn" href={SITE.medium} target="_blank" rel="noopener noreferrer">
+        Leer en Medium
+      </a>
+      <span class="btn btn-soon" role="link" aria-disabled="true" tabindex="0">
+        <span class="soon-label">Ver YouTube</span>
+        <span class="soon-hover" aria-hidden="true">Próximamente</span>
+      </span>
+    </div>
+    </div>
+    <div class="contact-visual" aria-hidden="true">
+      <HeroTerminal title="contacto.sh" lines={lines} />
     </div>
   </section>
 </Layout>
 
 <style>
+  :global(main) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .contact {
+    width: 100%;
     padding: 4rem 1.5rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .contact-text {
+    min-width: 0;
     max-width: var(--content-width);
+  }
+
+  .contact-visual {
+    min-width: 0;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 14px;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(57, 184, 255, 0.28), transparent 55%),
+      radial-gradient(circle at 100% 100%, rgba(57, 184, 255, 0.14), transparent 50%),
+      var(--hero-bg);
+    border: 1px solid var(--hero-rule);
+  }
+
+  @media (max-width: 800px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
   }
 
   .lede {
@@ -41,5 +95,29 @@ import { SITE } from '../../config';
     gap: 1rem;
     margin-top: 1.5rem;
     flex-wrap: wrap;
+  }
+
+  .btn-soon {
+    display: inline-grid;
+    cursor: default;
+  }
+
+  .btn-soon > span {
+    grid-area: 1 / 1;
+    text-align: center;
+  }
+
+  .btn-soon .soon-hover {
+    visibility: hidden;
+  }
+
+  .btn-soon:hover .soon-label,
+  .btn-soon:focus-visible .soon-label {
+    visibility: hidden;
+  }
+
+  .btn-soon:hover .soon-hover,
+  .btn-soon:focus-visible .soon-hover {
+    visibility: visible;
   }
 </style>

@@ -102,6 +102,11 @@ const contactHref = lang === 'es' ? '/es/contacto/' : '/en/contact/';
     padding: 0.5rem 1rem;
   }
 
+  .nav a.contact-cta,
+  .nav a.contact-cta:hover {
+    color: var(--color-bg);
+  }
+
   @media (max-width: 560px) {
     .nav a:not(.contact-cta):not(.lang-switch) {
       display: none;
