@@ -21,6 +21,27 @@ Este sitio es bilingüe. **Todo contenido nuevo o modificado que el usuario pued
 - **Estilo de traducción:** traduce el sentido, no palabra por palabra, y mantén una longitud similar para no romper las líneas de las terminales. Conserva nombres propios y siglas. Las fechas, URLs y números deben ser idénticos en ambas versiones.
 - **Antes de terminar:** ejecuta `npx astro build`, confirma que se generan las rutas `/es/...` y `/en/...`, y lista qué archivos cambiaron en cada idioma. Si algo no pudo traducirse, indícalo de forma explícita.
 
+## Imágenes
+
+Toda imagen nueva o modificada en `public/images/` debe optimizarse **sin pérdida de calidad** antes de terminar el cambio.
+
+- **Código:** no uses capturas de código en los artículos; escribe el código como bloque de código en el markdown (por ejemplo ```` ```jsx ````).
+- **JPEG:** usa `jpegtran`, que optimiza la codificación sin recomprimir los píxeles y elimina los metadatos EXIF:
+
+  ```
+  jpegtran -copy none -optimize -progressive entrada.jpeg > salida.jpeg
+  ```
+
+- **PNG:** recomprime con `sharp` (ya está en `node_modules`) al nivel máximo, sin paleta reducida:
+
+  ```js
+  await sharp(entrada).png({ compressionLevel: 9, effort: 10, adaptiveFiltering: true }).toFile(salida);
+  ```
+
+- **Verificación:** genera los archivos optimizados en un directorio temporal, compara los píxeles con `sharp(...).raw().toBuffer()` y reemplaza el original solo si los píxeles son idénticos y el archivo es más liviano. Conserva el nombre, el formato y las dimensiones para no tener que tocar el markdown.
+- **Optimización con pérdida:** convertir a WebP, bajar la calidad del JPEG, reducir la paleta del PNG o cambiar las dimensiones solo se hace si el usuario lo aprueba explícitamente.
+- **Antes de terminar:** informa el peso antes y después de cada imagen.
+
 ## Documentación
 
 Documentación completa: https://docs.astro.build

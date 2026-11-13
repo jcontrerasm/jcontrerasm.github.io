@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+import Mermaid from '../components/Mermaid.astro';
 import type { CollectionEntry } from 'astro:content';
 import { slugify } from '../utils/slug';
 
@@ -45,6 +46,7 @@ const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
       <slot />
     </div>
   </article>
+  <Mermaid />
 </Layout>
 
 <style>

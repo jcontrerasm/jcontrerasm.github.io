@@ -1,0 +1,87 @@
+---
+// Renderiza en el cliente los bloques ```mermaid de los artículos.
+// Mermaid solo se descarga si la página tiene diagramas y se vuelve a
+// dibujar al cambiar el tema para usar los colores de global.css.
+---
+
+<script>
+  async function init() {
+    const blocks = [...document.querySelectorAll<HTMLElement>('pre > code.language-mermaid')];
+    if (!blocks.length) return;
+
+    const diagrams = blocks.map((code) => {
+      const container = document.createElement('div');
+      container.className = 'mermaid-diagram';
+      container.dataset.source = code.textContent ?? '';
+      code.parentElement!.replaceWith(container);
+      return container;
+    });
+
+    const { default: mermaid } = await import('mermaid');
+
+    const token = (name: string) =>
+      getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    let renderCount = 0;
+    const render = async () => {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        fontFamily: token('--font-body'),
+        themeVariables: {
+          background: token('--color-bg'),
+          primaryColor: token('--color-accent-tint'),
+          primaryBorderColor: token('--color-accent'),
+          primaryTextColor: token('--color-text-primary'),
+          secondaryColor: token('--color-surface-raised'),
+          tertiaryColor: token('--color-surface'),
+          lineColor: token('--color-text-secondary'),
+          textColor: token('--color-text-primary'),
+          clusterBkg: token('--color-surface-raised'),
+          clusterBorder: token('--color-border-strong'),
+          edgeLabelBackground: token('--color-bg'),
+          actorBkg: token('--color-accent-tint'),
+          actorBorder: token('--color-accent'),
+          actorTextColor: token('--color-text-primary'),
+          actorLineColor: token('--color-border-strong'),
+          signalColor: token('--color-text-secondary'),
+          signalTextColor: token('--color-text-primary'),
+          noteBkgColor: token('--color-surface-raised'),
+          noteBorderColor: token('--color-border-strong'),
+          noteTextColor: token('--color-text-primary'),
+        },
+      });
+      for (const container of diagrams) {
+        const { svg } = await mermaid.render(`mermaid-${renderCount++}`, container.dataset.source!);
+        container.innerHTML = svg;
+      }
+    };
+
+    await render();
+
+    new MutationObserver(render).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+  }
+
+  init();
+</script>
+
+<style is:global>
+  .mermaid-diagram {
+    margin: 1.75rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-surface);
+    overflow-x: auto;
+    text-align: center;
+  }
+
+  .mermaid-diagram svg {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

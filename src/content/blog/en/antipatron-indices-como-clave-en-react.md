@@ -23,11 +23,44 @@ Next, we will see that with an incorrect value assigned to the **key** prop, our
 
 We have a list of products represented by the constant **data**.
 
-![The data constant with the product list](/images/blog/indices-como-clave-react/img-02.png)
+```jsx
+const data = [
+  { id: 43434, name: 'Tangerine' },
+  { id: 86756, name: 'Granadilla' }
+];
+```
 
 Then we implement the `App` component, which holds a **product** state initialized with the value of **data** to render the product list.
 
-![App component using the index as key](/images/blog/indices-como-clave-react/img-03.png)
+```jsx
+const App = () => {
+  const [products, setProducts] = useState(data);
+
+  const updateProducts = () => {
+    const newProducts = [...products];
+
+    newProducts.unshift({
+      id: 65878,
+      name: 'Strawberry'
+    });
+    setProducts(newProducts);
+  };
+
+  return (
+    <>
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>
+            <span>{product.name}: </span>
+            <input type="text" />
+          </li>
+        ))}
+      </ul>
+      <button onClick={updateProducts}>Add</button>
+    </>
+  );
+};
+```
 
 As we can see, the component also has an event handler that lets us add one more product at the top of the list. Let's see how it looks on screen…
 
@@ -57,7 +90,35 @@ This happens because in our component's implementation, the **key** prop has the
 
 To fix this, the good practice is to assign the **key** prop a unique, non-repeating value for each element. In this case we could use the **id** property.
 
-![App component using the id as key](/images/blog/indices-como-clave-react/img-08.png)
+```jsx
+const App = () => {
+  const [products, setProducts] = useState(data);
+
+  const updateProducts = () => {
+    const newProducts = [...products];
+
+    newProducts.unshift({
+      id: 65878,
+      name: 'Strawberry'
+    });
+    setProducts(newProducts);
+  };
+
+  return (
+    <>
+      <ul>
+        {products.map((product, index) => (
+          <li key={product.id}>
+            <span>{product.name}: </span>
+            <input type="text" />
+          </li>
+        ))}
+      </ul>
+      <button onClick={updateProducts}>Add</button>
+    </>
+  );
+};
+```
 
 Now we enter the quantities for each product and then click the **"Add"** button.
 

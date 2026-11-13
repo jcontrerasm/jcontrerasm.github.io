@@ -23,11 +23,44 @@ A continuación, veremos que con una asignación de valor incorrecta a la propie
 
 Tenemos una lista de productos que se encuentra representada por la constante **data**.
 
-![Constante data con la lista de productos](/images/blog/indices-como-clave-react/img-02.png)
+```jsx
+const data = [
+  { id: 43434, name: 'Mandarina' },
+  { id: 86756, name: 'Granadilla' }
+];
+```
 
 Luego implementamos el componente `App`, que contiene un estado **product** que se inicializa con el valor de **data** para representar la lista de productos.
 
-![Componente App usando el índice como key](/images/blog/indices-como-clave-react/img-03.png)
+```jsx
+const App = () => {
+  const [products, setProducts] = useState(data);
+
+  const updateProducts = () => {
+    const newProducts = [...products];
+
+    newProducts.unshift({
+      id: 65878,
+      name: 'Fresa'
+    });
+    setProducts(newProducts);
+  };
+
+  return (
+    <>
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>
+            <span>{product.name}: </span>
+            <input type="text" />
+          </li>
+        ))}
+      </ul>
+      <button onClick={updateProducts}>Agregar</button>
+    </>
+  );
+};
+```
 
 Como podemos ver, el componente también contiene un manejador de eventos que permitirá agregar un producto más a la lista en la parte superior. Observemos cómo se ve en la pantalla…
 
@@ -57,7 +90,35 @@ Esto se debe a que en nuestra implementación del componente, la propiedad **key
 
 Para solucionar esto, lo que deberíamos hacer como buena práctica es asignar a la propiedad **key** un valor único e irrepetible para cada elemento. En este caso podríamos usar la propiedad **id**.
 
-![Componente App usando el id como key](/images/blog/indices-como-clave-react/img-08.png)
+```jsx
+const App = () => {
+  const [products, setProducts] = useState(data);
+
+  const updateProducts = () => {
+    const newProducts = [...products];
+
+    newProducts.unshift({
+      id: 65878,
+      name: 'Fresa'
+    });
+    setProducts(newProducts);
+  };
+
+  return (
+    <>
+      <ul>
+        {products.map((product, index) => (
+          <li key={product.id}>
+            <span>{product.name}: </span>
+            <input type="text" />
+          </li>
+        ))}
+      </ul>
+      <button onClick={updateProducts}>Agregar</button>
+    </>
+  );
+};
+```
 
 Ahora, ingresamos las cantidades por producto y luego le damos en el botón **"Agregar"**.
 
