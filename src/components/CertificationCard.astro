@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  issuer: string;
+  image: string;
+  alt: string;
+}
+
+const { title, issuer, image, alt } = Astro.props;
+---
+
+<div class="card cert-card">
+  <img class="cert-badge-img" src={image} alt={alt} loading="lazy" width="112" height="112" />
+  <h3>{title}</h3>
+  <p>{issuer}</p>
+</div>
+
+<style>
+  .cert-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .cert-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+
+  .cert-badge-img {
+    width: 112px;
+    height: 112px;
+    object-fit: contain;
+    margin-bottom: 0.3rem;
+  }
+
+  .cert-card h3 {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .cert-card p {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+</style>
