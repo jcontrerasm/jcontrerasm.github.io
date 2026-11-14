@@ -3,31 +3,25 @@ import Layout from './Layout.astro';
 import Mermaid from '../components/Mermaid.astro';
 import type { CollectionEntry } from 'astro:content';
 import { slugify } from '../utils/slug';
+import { formatDate } from '../utils/date';
 
 interface Props {
   entry: CollectionEntry<'blog'>;
   translationHref?: string;
+  alternateHref?: string;
 }
 
-const { entry, translationHref } = Astro.props;
+const { entry, translationHref, alternateHref } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, lang, heroImage, status } = entry.data;
 
-const formattedPubDate = pubDate.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
-const formattedUpdatedDate = updatedDate?.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const formattedPubDate = formatDate(pubDate, lang);
+const formattedUpdatedDate = updatedDate && formatDate(updatedDate, lang);
 const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
 // Solo llega a verse en `astro dev`: en producción los borradores no se generan
 const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · will not be published';
 ---
 
-<Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Artículos' : 'Articles'}`} description={description} translationHref={translationHref}>
+<Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Artículos' : 'Articles'}`} description={description} translationHref={translationHref} alternateHref={alternateHref} image={`/og/${entry.id}.png`} type="article" publishedTime={pubDate}>
   <article class="container prose post">
     <header class="post-header">
       {heroImage && <img src={heroImage.src} alt="" class="hero" />}

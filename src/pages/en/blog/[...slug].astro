@@ -10,15 +10,16 @@ export async function getStaticPaths() {
 
   return posts.map((entry) => {
     const slug = entry.id.replace(/^en\//, '');
-    const translationHref = esBasenames.has(slug) ? `/es/blog/${slug}/` : '/es/blog/';
-    return { params: { slug }, props: { entry, translationHref } };
+    const alternateHref = esBasenames.has(slug) ? `/es/blog/${slug}/` : undefined;
+    const translationHref = alternateHref ?? '/es/blog/';
+    return { params: { slug }, props: { entry, translationHref, alternateHref } };
   });
 }
 
-const { entry, translationHref } = Astro.props;
+const { entry, translationHref, alternateHref } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<BlogPost entry={entry} translationHref={translationHref}>
+<BlogPost entry={entry} translationHref={translationHref} alternateHref={alternateHref}>
   <Content />
 </BlogPost>
