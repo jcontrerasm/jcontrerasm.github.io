@@ -1,0 +1,142 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+// Navegación entre las partes de una serie. `variant="summary"` va al inicio del
+// artículo con la lista de partes; `variant="pager"` va al final con anterior/siguiente.
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+  parts: CollectionEntry<'blog'>[];
+  variant: 'summary' | 'pager';
+}
+
+const { entry, parts, variant } = Astro.props;
+const { lang, series } = entry.data;
+const href = (p: CollectionEntry<'blog'>) => `/${lang}/blog/${p.id.replace(/^(es|en)\//, '')}/`;
+
+const t = {
+  es: { series: 'Serie', part: 'Parte', previous: 'Parte anterior', next: 'Siguiente parte' },
+  en: { series: 'Series', part: 'Part', previous: 'Previous part', next: 'Next part' },
+}[lang];
+
+const index = parts.findIndex((p) => p.id === entry.id);
+const previous = parts[index - 1];
+const next = parts[index + 1];
+---
+
+{
+  series && variant === 'summary' && (
+    <aside class="series-summary" aria-label={`${t.series}: ${series.name}`}>
+      <p class="series-label">
+        {t.series} · <strong>{series.name}</strong>
+      </p>
+      <ol>
+        {parts.map((p) => (
+          <li>
+            <span class="part-number">
+              {t.part} {p.data.series!.part}
+            </span>
+            {p.id === entry.id ? (
+              <span aria-current="page">{p.data.title}</span>
+            ) : (
+              <a href={href(p)}>{p.data.title}</a>
+            )}
+          </li>
+        ))}
+      </ol>
+    </aside>
+  )
+}
+
+{
+  series && variant === 'pager' && (previous || next) && (
+    <nav class="series-pager" aria-label={`${t.series}: ${series.name}`}>
+      {previous && (
+        <a class="pager-link prev" href={href(previous)}>
+          <span class="pager-label">← {t.previous}</span>
+          <span class="pager-title">{previous.data.title}</span>
+        </a>
+      )}
+      {next && (
+        <a class="pager-link next" href={href(next)}>
+          <span class="pager-label">{t.next} →</span>
+          <span class="pager-title">{next.data.title}</span>
+        </a>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .series-summary {
+    margin: 1.25rem 0 0;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 8px;
+    background: var(--color-surface);
+    font-size: 0.9rem;
+  }
+
+  .series-label {
+    margin: 0 0 0.5rem;
+    color: var(--color-text-secondary);
+  }
+
+  .series-label strong {
+    color: var(--color-text-primary);
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .part-number {
+    display: inline-block;
+    min-width: 4.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  [aria-current='page'] {
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .series-pager {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .pager-link {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  .pager-link:hover {
+    border-color: var(--color-accent);
+  }
+
+  .next {
+    text-align: right;
+    grid-column: -2;
+  }
+
+  .pager-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+  }
+</style>

@@ -4,6 +4,10 @@ description: "The fundamentals of RAG explained step by step: what vectors and e
 pubDate: 2025-11-13
 lang: en
 status: published
+series:
+  id: rag-desde-cero
+  name: "RAG from Scratch"
+  part: 1
 tags: ["AI", "RAG", "LLM"]
 ---
 

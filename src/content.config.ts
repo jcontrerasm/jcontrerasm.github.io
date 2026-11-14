@@ -12,6 +12,14 @@ const blog = defineCollection({
       lang: z.enum(['es', 'en']),
       tags: z.array(z.string()).default([]),
       status: z.enum(['draft', 'published']),
+      // Artículos de una misma serie comparten `id` (igual en es y en); `name` va traducido
+      series: z
+        .object({
+          id: z.string(),
+          name: z.string(),
+          part: z.number().int().positive(),
+        })
+        .optional(),
       heroImage: image().optional(),
     }),
 });

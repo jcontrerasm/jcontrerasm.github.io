@@ -4,6 +4,10 @@ description: "Los fundamentos de RAG explicados paso a paso: qué son los vector
 pubDate: 2025-11-13
 lang: es
 status: published
+series:
+  id: rag-desde-cero
+  name: "RAG desde cero"
+  part: 1
 tags: ["IA", "RAG", "LLM"]
 ---
 

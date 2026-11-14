@@ -1,0 +1,90 @@
+---
+// Agrega un botón para copiar a cada bloque de código del artículo. Los textos
+// se eligen según el idioma de la página (<html lang>).
+---
+
+<script>
+  const labels = {
+    es: { copy: 'Copiar', copied: 'Copiado', failed: 'Error' },
+    en: { copy: 'Copy', copied: 'Copied', failed: 'Error' },
+  };
+  const t = document.documentElement.lang === 'en' ? labels.en : labels.es;
+
+  // La API del portapapeles exige HTTPS y permisos; si falla, se copia seleccionando el texto
+  async function copyText(text: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.append(area);
+      area.select();
+      const ok = document.execCommand('copy');
+      area.remove();
+      return ok;
+    }
+  }
+
+  // Los bloques mermaid los reemplaza Mermaid.astro por diagramas
+  for (const pre of document.querySelectorAll<HTMLPreElement>('.post .body pre')) {
+    const code = pre.querySelector('code');
+    if (!code || code.classList.contains('language-mermaid')) continue;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    pre.replaceWith(wrapper);
+    wrapper.append(pre);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'code-copy';
+    button.textContent = t.copy;
+    button.addEventListener('click', async () => {
+      button.textContent = (await copyText(code.innerText)) ? t.copied : t.failed;
+      setTimeout(() => (button.textContent = t.copy), 1800);
+    });
+    wrapper.append(button);
+  }
+</script>
+
+<style is:global>
+  .code-block {
+    position: relative;
+  }
+
+  .code-copy {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s var(--ease);
+  }
+
+  .code-block:hover .code-copy,
+  .code-copy:focus-visible {
+    opacity: 1;
+  }
+
+  /* En pantallas táctiles no hay hover: el botón queda siempre visible */
+  @media (hover: none) {
+    .code-copy {
+      opacity: 1;
+    }
+  }
+
+  .code-copy:hover {
+    color: var(--color-accent);
+  }
+</style>

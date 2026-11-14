@@ -1,0 +1,136 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+// Índice del artículo. En pantallas anchas queda fijo al costado y marca la
+// sección visible; en móvil aparece al inicio y muestra solo los títulos principales.
+
+interface Props {
+  headings: MarkdownHeading[];
+  lang: 'es' | 'en';
+}
+
+const { headings, lang } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const label = lang === 'es' ? 'En este artículo' : 'On this page';
+---
+
+{
+  items.length >= 3 && (
+    <nav class="toc" aria-label={label}>
+      <p class="toc-title">{label}</p>
+      <ol>
+        {items.map((h) => (
+          <li class={`depth-${h.depth}`}>
+            <a href={`#${h.slug}`} data-toc-link={h.slug}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<script>
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+  const headings = links
+    .map((link) => document.getElementById(link.dataset.tocLink!))
+    .filter((h): h is HTMLElement => h !== null);
+
+  if (headings.length) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      // La sección activa es el último título que ya pasó por debajo del encabezado fijo
+      const offset = 120;
+      let active = headings[0];
+      for (const h of headings) {
+        if (h.getBoundingClientRect().top - offset <= 0) active = h;
+        else break;
+      }
+      for (const link of links) {
+        if (link.dataset.tocLink === active.id) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true }
+    );
+    update();
+  }
+</script>
+
+<style>
+  .toc {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-surface);
+  }
+
+  .toc-title {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .depth-3 {
+    display: none;
+    padding-left: 0.9rem;
+  }
+
+  a {
+    display: block;
+    padding-left: 0.6rem;
+    border-left: 2px solid transparent;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-text-primary);
+  }
+
+  a[aria-current='true'] {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+  }
+
+  /* En pantallas anchas el índice va al costado, fijo y con los subtítulos */
+  @media (min-width: 1100px) {
+    .toc {
+      position: sticky;
+      top: calc(var(--masthead-h) + 1.5rem);
+      max-height: calc(100vh - var(--masthead-h) - 3rem);
+      overflow-y: auto;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+
+    .depth-3 {
+      display: block;
+    }
+  }
+</style>

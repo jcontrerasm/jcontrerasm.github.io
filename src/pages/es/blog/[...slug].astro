@@ -17,9 +17,9 @@ export async function getStaticPaths() {
 }
 
 const { entry, translationHref, alternateHref } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 ---
 
-<BlogPost entry={entry} translationHref={translationHref} alternateHref={alternateHref}>
+<BlogPost entry={entry} translationHref={translationHref} alternateHref={alternateHref} headings={headings}>
   <Content />
 </BlogPost>

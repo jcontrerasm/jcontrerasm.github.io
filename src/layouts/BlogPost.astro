@@ -1,7 +1,13 @@
 ---
 import Layout from './Layout.astro';
 import Mermaid from '../components/Mermaid.astro';
-import type { CollectionEntry } from 'astro:content';
+import TableOfContents from '../components/TableOfContents.astro';
+import SeriesNav from '../components/SeriesNav.astro';
+import CodeCopy from '../components/CodeCopy.astro';
+import BlogPostCard from '../components/BlogPostCard.astro';
+import type { MarkdownHeading } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { isVisible, readingTime, relatedPosts } from '../utils/posts';
 import { slugify } from '../utils/slug';
 import { formatDate } from '../utils/date';
 
@@ -9,27 +15,40 @@ interface Props {
   entry: CollectionEntry<'blog'>;
   translationHref?: string;
   alternateHref?: string;
+  headings: MarkdownHeading[];
 }
 
-const { entry, translationHref, alternateHref } = Astro.props;
-const { title, description, pubDate, updatedDate, tags, lang, heroImage, status } = entry.data;
+const { entry, translationHref, alternateHref, headings } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, lang, heroImage, status, series } = entry.data;
+
+const allPosts = await getCollection('blog', isVisible);
+const seriesParts = series
+  ? allPosts
+      .filter((p) => p.data.lang === lang && p.data.series?.id === series.id)
+      .sort((a, b) => a.data.series!.part - b.data.series!.part)
+  : [];
+const related = relatedPosts(entry, allPosts);
+const minutes = readingTime(entry);
 
 const formattedPubDate = formatDate(pubDate, lang);
 const formattedUpdatedDate = updatedDate && formatDate(updatedDate, lang);
 const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
+const readingLabel = lang === 'es' ? `${minutes} min de lectura` : `${minutes} min read`;
+const relatedLabel = lang === 'es' ? 'Artículos relacionados' : 'Related articles';
 // Solo llega a verse en `astro dev`: en producción los borradores no se generan
 const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · will not be published';
 ---
 
 <Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Artículos' : 'Articles'}`} description={description} translationHref={translationHref} alternateHref={alternateHref} image={`/og/${entry.id}.png`} type="article" publishedTime={pubDate}>
-  <article class="container prose post">
+  <article class="container post">
     <header class="post-header">
       {heroImage && <img src={heroImage.src} alt="" class="hero" />}
       {status === 'draft' && <p class="draft-badge">{draftLabel}</p>}
       <h1>{title}</h1>
       <div class="meta">
         <time datetime={pubDate.toISOString()}>{formattedPubDate}</time>
-        {updatedDate && <span>· {updatedLabel} {formattedUpdatedDate}</span>}
+        {updatedDate && <span>{` · ${updatedLabel} ${formattedUpdatedDate}`}</span>}
+        <span>{` · ${readingLabel}`}</span>
       </div>
       <div class="tags">
         {tags.map((tag) => (
@@ -38,17 +57,95 @@ const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · wi
           </a>
         ))}
       </div>
+      <SeriesNav entry={entry} parts={seriesParts} variant="summary" />
     </header>
+    <aside class="post-toc">
+      <TableOfContents headings={headings} lang={lang} />
+    </aside>
     <div class="body">
       <slot />
+      <SeriesNav entry={entry} parts={seriesParts} variant="pager" />
+      {
+        related.length > 0 && (
+          <section class="related">
+            <h2>{relatedLabel}</h2>
+            <div class="related-grid">
+              {related.map((post) => (
+                <BlogPostCard
+                  href={`/${lang}/blog/${post.id.replace(/^(es|en)\//, '')}/`}
+                  title={post.data.title}
+                  description={post.data.description}
+                  pubDate={post.data.pubDate}
+                  tags={post.data.tags}
+                  lang={lang}
+                />
+              ))}
+            </div>
+          </section>
+        )
+      }
     </div>
   </article>
   <Mermaid lang={lang} />
+  <CodeCopy />
 </Layout>
 
 <style>
+  /* Una columna en móvil (encabezado, índice, contenido); en pantallas anchas
+     el índice pasa a una columna lateral fija junto al contenido. */
   .post {
+    display: grid;
+    grid-template-columns: minmax(0, var(--content-width));
+    grid-template-areas: 'header' 'toc' 'body';
+    justify-content: center;
     padding: 2rem 1.5rem 3rem;
+  }
+
+  .post-header {
+    grid-area: header;
+  }
+
+  .post-toc {
+    grid-area: toc;
+    margin-bottom: 2rem;
+  }
+
+  .post-toc:not(:has(nav)) {
+    display: none;
+  }
+
+  .body {
+    grid-area: body;
+    min-width: 0;
+  }
+
+  @media (min-width: 1100px) {
+    .post {
+      grid-template-columns: minmax(0, var(--content-width)) 15rem;
+      grid-template-areas: 'header .' 'body toc';
+      column-gap: 4rem;
+    }
+
+    .post-toc {
+      margin-bottom: 0;
+    }
+  }
+
+  .body :global(h2),
+  .body :global(h3) {
+    scroll-margin-top: calc(var(--masthead-h) + 1.5rem);
+  }
+
+  .related {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
   }
 
   .post-header {
