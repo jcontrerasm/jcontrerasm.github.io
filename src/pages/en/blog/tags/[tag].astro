@@ -1,12 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
+import { isVisible } from '../../../../utils/posts';
 import Layout from '../../../../layouts/Layout.astro';
 import BlogPostCard from '../../../../components/BlogPostCard.astro';
 import { SITE } from '../../../../config';
 import { slugify } from '../../../../utils/slug';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', (p) => p.data.lang === 'en' && !p.data.draft);
+  const posts = await getCollection('blog', (p) => p.data.lang === 'en' && isVisible(p));
   const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
 
   return tags.map((tag) => ({

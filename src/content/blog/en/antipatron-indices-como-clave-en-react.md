@@ -3,6 +3,7 @@ title: "The Index-as-Key Antipattern in React"
 description: "Why the key prop matters for React's rendering, and how using the array index as its value can break the behavior of your components."
 pubDate: 2019-09-06
 lang: en
+status: published
 tags: ["React", "JavaScript", "Optimization", "Front-end"]
 ---
 

@@ -3,9 +3,10 @@ import Layout from '../../../layouts/Layout.astro';
 import BlogFilter from '../../../components/BlogFilter.astro';
 import BlogPostCard from '../../../components/BlogPostCard.astro';
 import { getCollection } from 'astro:content';
+import { isVisible } from '../../../utils/posts';
 import { SITE } from '../../../config';
 
-const posts = (await getCollection('blog', (p) => p.data.lang === 'en' && !p.data.draft)).sort(
+const posts = (await getCollection('blog', (p) => p.data.lang === 'en' && isVisible(p))).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---

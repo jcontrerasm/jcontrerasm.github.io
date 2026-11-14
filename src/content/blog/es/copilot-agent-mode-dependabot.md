@@ -3,6 +3,7 @@ title: "Remediando vulnerabilidades a escala con GitHub Copilot en modo agente"
 description: "Cómo pasamos de contratar desarrolladores para remediar vulnerabilidades una por una a una remediación masiva impulsada por agentes de IA a nivel de organización."
 pubDate: 2026-07-14
 lang: es
+status: draft
 tags: ["IA", "DevSecOps", "Dependabot"]
 ---
 

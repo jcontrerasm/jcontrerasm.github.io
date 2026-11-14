@@ -3,6 +3,7 @@ title: "Why Engineering Culture Matters as Much as Architecture"
 description: "Thoughts on engineering culture transformation, and why technical metrics belong in that same conversation instead of standing apart from it."
 pubDate: 2026-08-04
 lang: en
+status: draft
 tags: ["Engineering Culture", "Metrics"]
 ---
 

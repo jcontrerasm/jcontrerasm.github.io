@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { entry, translationHref } = Astro.props;
-const { title, description, pubDate, updatedDate, tags, lang, heroImage } = entry.data;
+const { title, description, pubDate, updatedDate, tags, lang, heroImage, status } = entry.data;
 
 const formattedPubDate = pubDate.toLocaleDateString(lang === 'es' ? 'es-PE' : 'en-US', {
   year: 'numeric',
@@ -23,12 +23,15 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString(lang === 'es' ? 'es
   day: 'numeric',
 });
 const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
+// Solo llega a verse en `astro dev`: en producción los borradores no se generan
+const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · will not be published';
 ---
 
 <Layout lang={lang} title={`${title} — ${lang === 'es' ? 'Artículos' : 'Articles'}`} description={description} translationHref={translationHref}>
   <article class="container prose post">
     <header class="post-header">
       {heroImage && <img src={heroImage.src} alt="" class="hero" />}
+      {status === 'draft' && <p class="draft-badge">{draftLabel}</p>}
       <h1>{title}</h1>
       <div class="meta">
         <time datetime={pubDate.toISOString()}>{formattedPubDate}</time>
@@ -61,6 +64,18 @@ const updatedLabel = lang === 'es' ? 'Actualizado' : 'Updated';
   .hero {
     border-radius: 12px;
     margin-bottom: 1.5rem;
+  }
+
+  .draft-badge {
+    display: inline-block;
+    margin: 0 0 0.8rem;
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    background: var(--color-accent-tint);
+    border: 1px dashed var(--color-accent);
+    border-radius: 6px;
   }
 
   .meta {

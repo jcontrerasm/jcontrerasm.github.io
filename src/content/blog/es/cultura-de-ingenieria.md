@@ -3,6 +3,7 @@ title: "Por qué la cultura de ingeniería importa tanto como la arquitectura"
 description: "Reflexiones sobre transformación de cultura de ingeniería y por qué las métricas técnicas son parte de esa conversación, no un tema aparte."
 pubDate: 2026-08-04
 lang: es
+status: draft
 tags: ["Cultura de Ingeniería", "Métricas"]
 ---
 

@@ -1,9 +1,10 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { isVisible } from '../../utils/posts';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const posts = await getCollection('blog', (p) => p.data.lang === 'es' && !p.data.draft);
+  const posts = await getCollection('blog', (p) => p.data.lang === 'es' && isVisible(p));
 
   return rss({
     title: 'Juan Carlos Contreras — Blog',

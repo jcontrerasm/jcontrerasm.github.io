@@ -3,6 +3,7 @@ title: "Antipatrón de índice como clave en React"
 description: "Por qué la propiedad key es clave para el renderizado de React y cómo usar el índice del arreglo como valor puede romper el comportamiento de tus componentes."
 pubDate: 2019-09-06
 lang: es
+status: published
 tags: ["React", "JavaScript", "Optimización", "Front-end"]
 ---
 

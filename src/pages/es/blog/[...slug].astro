@@ -1,10 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { isVisible } from '../../../utils/posts';
 import BlogPost from '../../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', (p) => p.id.startsWith('es/') && !p.data.draft);
-  const enPosts = await getCollection('blog', (p) => p.id.startsWith('en/') && !p.data.draft);
+  const posts = await getCollection('blog', (p) => p.id.startsWith('es/') && isVisible(p));
+  const enPosts = await getCollection('blog', (p) => p.id.startsWith('en/') && isVisible(p));
   const enBasenames = new Set(enPosts.map((p) => p.id.replace(/^en\//, '')));
 
   return posts.map((entry) => {

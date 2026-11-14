@@ -3,6 +3,7 @@ title: "Mass-Remediating Vulnerabilities with GitHub Copilot Agent Mode"
 description: "How we went from hiring developers to fix vulnerabilities one by one to org-wide, AI-agent-driven remediation at scale."
 pubDate: 2026-07-14
 lang: en
+status: draft
 tags: ["AI", "DevSecOps", "Dependabot"]
 ---
 

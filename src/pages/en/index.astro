@@ -7,6 +7,7 @@ import BlogPostCard from '../../components/BlogPostCard.astro';
 import DevSecOpsPipeline from '../../components/DevSecOpsPipeline.astro';
 import PhotoCarousel from '../../components/PhotoCarousel.astro';
 import { getCollection } from 'astro:content';
+import { isPublished } from '../../utils/posts';
 import { SITE } from '../../config';
 
 const imagesDir = new URL('../../../public/images/', import.meta.url);
@@ -15,7 +16,7 @@ const galleryImages = fs
   .filter((file) => file.startsWith('gallery_'))
   .sort();
 
-const posts = (await getCollection('blog', (p) => p.data.lang === 'en' && !p.data.draft))
+const posts = (await getCollection('blog', (p) => p.data.lang === 'en' && isPublished(p)))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 

@@ -14,6 +14,7 @@ Este sitio es bilingüe. **Todo contenido nuevo o modificado que el usuario pued
 
 - **Páginas:** una página en `src/pages/es/` necesita su equivalente en `src/pages/en/` (por ejemplo `contacto.astro` ↔ `contact.astro`). Pasa `translationHref` a `Layout` para que el selector de idioma apunte a la página equivalente.
 - **Artículos del blog:** agrega `src/content/blog/es/<slug>.md` y `src/content/blog/en/<slug>.md` con el **mismo nombre de archivo**, `lang: es` / `lang: en` en el frontmatter y la misma `pubDate`. Traduce `title`, `description` y `tags`. Las imágenes compartidas van en `public/images/blog/<slug>/`.
+- **Estado de los artículos:** cada artículo lleva `status: draft` o `status: published` en el frontmatter, con el mismo valor en `es` y `en`. Los borradores solo se ven en `astro dev` (con un aviso de borrador); el build de producción los excluye del índice, las etiquetas, el RSS y el sitemap. Filtra siempre con `isVisible` de `src/utils/posts.ts`.
 - **Secciones y terminales:** arreglos como `softSkills` y `techSkills` viven por separado en `src/pages/es/index.astro` y `src/pages/en/index.astro`. Actualiza ambos, incluidos los comandos de las terminales (`ls plataforma/` ↔ `ls platform/`). Los nombres de tecnologías no se traducen.
 - **Navegación, footer, etiquetas y metadatos:** actualiza ambos idiomas en `src/config.ts`, `Header.astro`, `Footer.astro` y en cualquier prop `title` / `description`.
 - **Componentes:** nunca dejes texto escrito en un solo idioma; recibe una prop `lang` o recibe ambos textos desde la página.
