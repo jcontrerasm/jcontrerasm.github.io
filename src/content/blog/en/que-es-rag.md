@@ -7,6 +7,8 @@ status: published
 tags: ["AI", "RAG", "LLM"]
 ---
 
+![RAG illustration: document chunks, their embedding space and an LLM](/images/blog/que-es-rag/portada.png)
+
 RAG (*Retrieval-Augmented Generation*) is one of the most widely used techniques for getting an LLM to answer with your own information —internal documents, manuals, policies— without retraining it. To really understand it you have to start with its building blocks: vectors, embeddings and vector databases. This article collects my notes on each of them, ordered from the most basic to the full picture.
 
 > This is **part 1** of a series on RAG. Here we cover the fundamentals; in the next parts we'll put them into practice.

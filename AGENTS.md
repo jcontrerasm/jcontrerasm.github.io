@@ -36,8 +36,10 @@ Toda imagen nueva o modificada en `public/images/` debe optimizarse **sin pérdi
 - **PNG:** recomprime con `sharp` (ya está en `node_modules`) al nivel máximo, sin paleta reducida:
 
   ```js
-  await sharp(entrada).png({ compressionLevel: 9, effort: 10, adaptiveFiltering: true }).toFile(salida);
+  await sharp(entrada).png({ compressionLevel: 9, adaptiveFiltering: true }).toFile(salida);
   ```
+
+  No uses `effort`, `quality`, `colours` ni `dither`: en `sharp` cualquiera de ellas activa la paleta reducida, que es compresión con pérdida.
 
 - **Verificación:** genera los archivos optimizados en un directorio temporal, compara los píxeles con `sharp(...).raw().toBuffer()` y reemplaza el original solo si los píxeles son idénticos y el archivo es más liviano. Conserva el nombre, el formato y las dimensiones para no tener que tocar el markdown.
 - **Optimización con pérdida:** convertir a WebP, bajar la calidad del JPEG, reducir la paleta del PNG o cambiar las dimensiones solo se hace si el usuario lo aprueba explícitamente.
