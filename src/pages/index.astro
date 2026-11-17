@@ -1,4 +1,23 @@
 ---
-// Astro's i18n redirectToDefaultLocale generates the actual redirect to /es/
-// at build time; this file only needs to exist to mark the route.
+// GitHub Pages no permite redirecciones del servidor, así que la raíz redirige en el
+// cliente. `location.replace` actúa antes de pintar y el meta refresh con 0 s sirve de
+// respaldo sin JavaScript (el que genera Astro por defecto espera 2 s con la página en blanco).
+const target = '/es/';
 ---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Juan Carlos Contreras</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={new URL(target, Astro.site).href} />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body>
+    <a href={target}>Continuar / Continue</a>
+  </body>
+</html>
