@@ -13,7 +13,7 @@ const posts = (await getCollection('blog', (p) => p.data.lang === 'en' && isVisi
 
 <Layout
   lang="en"
-  title={`Articles — ${SITE.name}`}
+  title={`Articles — ${SITE.fullName}`}
   description="Articles on DevSecOps, engineering culture, metrics, and applied AI."
   translationHref="/es/blog/"
   alternateHref="/es/blog/"

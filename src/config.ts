@@ -1,5 +1,6 @@
 export const SITE = {
   name: 'Juan Carlos Contreras Meneses',
+  fullName: 'Juan Carlos Raúl Contreras Meneses',
   githubUser: 'jcontrerasm',
   linkedin: 'https://www.linkedin.com/in/juan-carlos-raul-contreras-meneses/',
   github: 'https://github.com/jcontrerasm',
