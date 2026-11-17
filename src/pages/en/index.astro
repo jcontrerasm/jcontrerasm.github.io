@@ -366,6 +366,7 @@ const certifications = [
     min-width: 0;
     max-width: 320px;
     width: 100%;
+    justify-self: center;
   }
 
   .gallery-eyebrow {
@@ -377,8 +378,15 @@ const certifications = [
       grid-template-columns: 1fr;
     }
 
+    /* El título queda a la izquierda; solo el carrusel se centra al ancho de la página */
     .bio-gallery {
+      max-width: none;
+      justify-self: stretch;
+    }
+
+    .bio-gallery :global(.photo-carousel) {
       max-width: 320px;
+      margin-inline: auto;
     }
   }
 

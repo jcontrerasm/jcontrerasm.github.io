@@ -105,13 +105,10 @@ const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · wi
     grid-area: header;
   }
 
+  /* En móvil y tablet el índice no se muestra */
   .post-toc {
-    grid-area: toc;
-    margin-bottom: 2rem;
-  }
-
-  .post-toc:not(:has(nav)) {
     display: none;
+    grid-area: toc;
   }
 
   .body {
@@ -127,7 +124,11 @@ const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · wi
     }
 
     .post-toc {
-      margin-bottom: 0;
+      display: block;
+    }
+
+    .post-toc:not(:has(nav)) {
+      display: none;
     }
   }
 
