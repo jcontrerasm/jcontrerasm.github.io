@@ -35,8 +35,8 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Auditar dependencias (falla con severidad alta o crítica)
-        run: npm audit --audit-level=high
+      - name: Auditar dependencias (falla con severidad alta o crítica, salvo scripts/audit-allowlist.json)
+        run: npm run check:audit
 
       - name: Contenido bilingüe es/en
         run: npm run check:i18n

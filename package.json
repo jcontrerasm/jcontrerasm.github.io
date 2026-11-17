@@ -12,6 +12,7 @@
     "astro": "astro",
     "stop": "astro dev stop",
     "check": "astro check",
+    "check:audit": "node scripts/check-audit.mjs",
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:images": "node scripts/check-images.mjs",
     "check:links": "node scripts/check-links.mjs",

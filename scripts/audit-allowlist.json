@@ -1,0 +1,11 @@
+{
+  "_comment": "Excepciones para `npm run check:audit`. Cada una necesita: id (GHSA), reason y expires (YYYY-MM-DD). Al vencer, el chequeo vuelve a fallar para obligar a revisarla.",
+  "exceptions": [
+    {
+      "id": "GHSA-fc5q-39xc-vjpf",
+      "package": "picomatch",
+      "reason": "ReDoS sin versión corregida (<= 4.0.7 es la última). Solo se ejecuta en el build de un sitio estático, sin entradas externas.",
+      "expires": "2027-02-17"
+    }
+  ]
+}
