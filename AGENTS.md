@@ -21,7 +21,7 @@ Este sitio es bilingüe. **Todo contenido nuevo o modificado que el usuario pued
 - **Componentes:** nunca dejes texto escrito en un solo idioma; recibe una prop `lang` o recibe ambos textos desde la página.
 - **Etiquetas y filtros:** el índice del blog arma el filtro de temas por idioma, así que las etiquetas deben estar traducidas en cada versión.
 - **Estilo de traducción:** traduce el sentido, no palabra por palabra, y mantén una longitud similar para no romper las líneas de las terminales. Conserva nombres propios y siglas. Las fechas, URLs y números deben ser idénticos en ambas versiones.
-- **Antes de terminar:** ejecuta `npx astro build`, confirma que se generan las rutas `/es/...` y `/en/...`, y lista qué archivos cambiaron en cada idioma. Si algo no pudo traducirse, indícalo de forma explícita.
+- **Antes de terminar:** ejecuta `npm run verify` (contenido bilingüe, imágenes, `astro check`, build y enlaces; son los mismos controles del workflow de CI) y, si cambiaste el diseño, `npm run lighthouse`. Luego ejecuta `npx astro build`, confirma que se generan las rutas `/es/...` y `/en/...`, y lista qué archivos cambiaron en cada idioma. Si algo no pudo traducirse, indícalo de forma explícita.
 
 ## Imágenes
 
@@ -33,6 +33,8 @@ Toda imagen nueva o modificada en `public/images/` debe optimizarse **sin pérdi
   ```
   jpegtran -copy none -optimize -progressive entrada.jpeg > salida.jpeg
   ```
+
+  Si la foto tiene un perfil de color distinto de sRGB (por ejemplo Display P3, habitual en fotos de iPhone), usa `-copy icc` en lugar de `-copy none`: conserva el perfil y elimina EXIF, XMP e IPTC. Sin el perfil, los colores cambian.
 
 - **PNG:** recomprime con `sharp` (ya está en `node_modules`) al nivel máximo, sin paleta reducida:
 

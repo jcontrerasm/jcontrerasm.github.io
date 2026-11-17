@@ -3,6 +3,9 @@ dist/
 # generated types
 .astro/
 
+# reportes de Lighthouse CI
+.lighthouseci/
+
 # dependencies
 node_modules/
 

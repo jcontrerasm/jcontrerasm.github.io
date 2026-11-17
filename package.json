@@ -10,7 +10,13 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "stop": "astro dev stop"
+    "stop": "astro dev stop",
+    "check": "astro check",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:images": "node scripts/check-images.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "lighthouse": "npx --yes @lhci/cli@0.16.1 autorun",
+    "verify": "npm run check:i18n && npm run check:images && npm run check && astro build && npm run check:links"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
