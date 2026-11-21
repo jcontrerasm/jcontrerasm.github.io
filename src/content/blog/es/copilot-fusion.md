@@ -1,9 +1,13 @@
 ---
-title: "GitHub Copilot Fusion: cuando dejas de elegir el modelo y empiezas a gobernar el pool"
+title: "Copilot Fusion (parte 1): cuando dejas de elegir el modelo y empiezas a gobernar el pool"
 description: "Qué es Copilot Fusion, cómo orquesta varios modelos por tarea y qué cambia para quienes lideramos la adopción de IA en el SDLC: costos, métricas y gobierno."
 pubDate: 2026-11-20
 lang: es
 status: draft
+series:
+  id: copilot-fusion
+  name: "Copilot Fusion"
+  part: 1
 tags: ["IA", "GitHub Copilot", "DevSecOps", "Métricas"]
 ---
 
@@ -90,67 +94,12 @@ Si Max no mejora la tasa de aceptación frente a Standard en un tipo de tarea, e
 
 En un [artículo anterior](/es/blog/copilot-agent-mode-dependabot/) conté cómo, al remediar vulnerabilidades con Copilot en modo agente, el desarrollador pasó de escribir la solución a evaluar la propuesta de la IA. Fusion profundiza ese cambio: ahora tampoco elige la herramienta, solo cuánto esfuerzo invertir. Hay un detalle a tener en cuenta: si Fusion descarta un borrador, las ediciones de archivos que ese borrador ya hizo no se deshacen. La revisión del diff sigue siendo responsabilidad nuestra.
 
-## Cómo configurar Fusion por defecto en GitHub Copilot
-
-La configuración por defecto la definen los administradores de la empresa, en dos pasos: qué modelos puede usar Fusion y qué modelo y nivel de esfuerzo arrancan en cada conversación nueva.
-
-### 1. Elegir los modelos que Fusion puede usar
-
-Desde la configuración de la empresa en GitHub:
-
-1. En la parte superior de la página, haz clic en **AI controls**.
-2. En la barra lateral, haz clic en **Copilot**.
-3. En la sección **Models**, haz clic en **Configure Copilot Fusion models**.
-4. Define el estado de cada modelo de la lista.
-
-Este control permite deshabilitar un modelo solo para Fusion, sin quitárselo al resto de los usuarios. Un modelo habilitado aquí solo se usa si las demás políticas de modelos de la empresa también lo permiten, así que este es el lugar para alinear el pool con las aprobaciones de seguridad y datos.
-
-### 2. Definir Fusion como modelo por defecto con enterprise managed settings
-
-Con los *enterprise managed settings*, Fusion queda como modelo por defecto para las conversaciones nuevas. Hay dos claves:
-
-- `model`: define el modelo por defecto de las conversaciones nuevas.
-- `fusionTier`: define el nivel de esfuerzo por defecto cuando el modelo es `fusion`. Acepta `"standard"`, `"high"`, `"max"` o `"unmanaged"`.
-
-Esta es la configuración que recomiendo para empezar: Fusion por defecto, en Standard, permitiendo que cada persona suba el nivel cuando la tarea lo necesite.
-
-```json
-{
-  "model": "fusion",
-  "fusionTier": { "overridable": "standard" }
-}
-```
-
-Si un equipo necesita otro nivel por defecto (por ejemplo, un equipo de plataforma que trabaja con cambios grandes en varios repositorios), puede sobrescribirlo en el archivo de configuración de su equipo:
-
-```json
-{
-  "fusionTier": "high"
-}
-```
-
-Si el equipo no define `fusionTier`, se aplica el valor de la empresa. Un detalle importante: si fijas `fusionTier` con un valor directo (por ejemplo `"standard"`, sin `overridable`), el nivel queda bloqueado y ni los usuarios ni los repositorios pueden cambiarlo. Úsalo solo si de verdad necesitas controlar el costo de forma estricta.
-
-### 3. Versiones mínimas de los clientes
-
-Estas configuraciones requieren versiones recientes de los clientes:
-
-| Cliente | Versión mínima |
-| --- | --- |
-| VS Code | 1.144.0 |
-| Copilot CLI | 1.0.104-3 |
-| App de GitHub Copilot | 1.1.33-4 |
-
-Para el desarrollador, el cambio se ve en el selector de modelos: aparece **Copilot Fusion** con sus niveles **Fusion Standard**, **Fusion High** y **Fusion Max**. Sin configuración de la empresa, cada persona puede elegirlo manualmente desde ese mismo selector.
-
-> La guía completa para crear el archivo de configuración está en la documentación de [enterprise managed settings](https://docs.github.com/copilot/reference/enterprise-administrators/enterprise-managed-settings) de GitHub.
-
 ## Cómo lo adoptaría
 
 Si estuviera empezando hoy, seguiría estos pasos:
 
 1. **Revisar la lista de modelos elegibles** para Fusion y alinearla con las políticas de seguridad y datos de la organización.
-2. **Definir Fusion en Standard como opción por defecto** (como en el apartado anterior) y dejar High y Max como decisiones explícitas.
+2. **Definir Fusion en Standard como opción por defecto** y dejar High y Max como decisiones explícitas. En la [segunda parte](/es/blog/copilot-fusion-configuracion/) explico cómo configurarlo.
 3. **Configurar presupuestos y alertas** antes de abrirlo a todos los equipos.
 4. **Hacer un piloto con métricas de línea base** (costo por PR, aceptación, retrabajo) en dos o tres equipos.
 5. **Comparar contra el uso actual** antes de escalar. El descuento temporal de lanzamiento puede distorsionar la foto de costos de las primeras semanas.
