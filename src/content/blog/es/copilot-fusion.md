@@ -17,6 +17,8 @@ Durante el último año, una de las preguntas que más he escuchado de los equip
 
 En GitHub Universe (28 de octubre de 2026), GitHub presentó **Copilot Fusion**, y lo interesante es que ataca justamente ese problema.
 
+Este artículo es la primera parte de una serie de dos. Aquí me enfoco en qué es Fusion y qué cambia para quienes lideramos la IA en el SDLC; en la [segunda parte](/es/blog/copilot-fusion-configuracion/) explico paso a paso cómo configurarlo por defecto en tu organización.
+
 ## ¿Qué es Copilot Fusion?
 
 Copilot Fusion **no es un modelo nuevo**. Es un motor de orquestación que decide, en tiempo de ejecución, qué modelo (o qué combinación de modelos) resuelve cada tarea y devuelve una sola respuesta. En palabras de Mario Rodriguez, CPO de GitHub: *"No es un modelo. Es un motor de orquestación en tiempo de ejecución"*.
@@ -109,6 +111,8 @@ Si estuviera empezando hoy, seguiría estos pasos:
 Copilot Fusion cambia la pregunta de *"¿qué modelo uso?"* a *"¿cuánto esfuerzo merece esta tarea?"*. Para el desarrollador es una simplificación; para quienes lideramos la IA en el SDLC es un cambio de responsabilidad: dejamos de administrar herramientas individuales y empezamos a **gobernar un pool de modelos y a medir su impacto real**.
 
 Los primeros números son prometedores, pero la decisión de escalar no debería salir de un benchmark, sino de nuestras propias métricas de ingeniería: costo por cambio entregado, calidad y seguridad. La IA acelera; la cultura y los datos deciden hacia dónde.
+
+Si quieres llevar esto a la práctica, en la [segunda parte](/es/blog/copilot-fusion-configuracion/) explico cómo dejar Fusion configurado por defecto en tu organización.
 
 Muchas gracias por el tiempo y espero que este artículo haya sido de ayuda.
 
