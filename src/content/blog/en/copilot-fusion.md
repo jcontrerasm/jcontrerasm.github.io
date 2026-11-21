@@ -17,6 +17,8 @@ Over the past year, one of the questions I've heard most from teams is: *"Which 
 
 At GitHub Universe (October 28, 2026), GitHub introduced **Copilot Fusion**, and what makes it interesting is that it goes straight at that problem.
 
+This article is the first of a two-part series. Here I focus on what Fusion is and what changes for those of us leading AI in the SDLC; in [part two](/en/blog/copilot-fusion-configuracion/) I walk through how to set it as the default in your organization, step by step.
+
 ## What is Copilot Fusion?
 
 Copilot Fusion **is not a new model**. It's an orchestration engine that decides, at runtime, which model (or which combination of models) handles each task, and returns a single answer. In the words of Mario Rodriguez, GitHub's CPO: *"It's not a model. It's an orchestration engine at runtime."*
@@ -109,6 +111,8 @@ If I were starting today, I'd follow these steps:
 Copilot Fusion changes the question from *"which model do I use?"* to *"how much effort does this task deserve?"*. For developers it's a simplification; for those of us leading AI in the SDLC it's a shift in responsibility: we stop managing individual tools and start **governing a pool of models and measuring their real impact**.
 
 The early numbers are promising, but the decision to scale shouldn't come from a benchmark. It should come from our own engineering metrics: cost per delivered change, quality and security. AI accelerates; culture and data decide where we're headed.
+
+If you want to put this into practice, in [part two](/en/blog/copilot-fusion-configuracion/) I explain how to set Fusion as the default in your organization.
 
 Thank you for your time, and I hope this article was helpful.
 
