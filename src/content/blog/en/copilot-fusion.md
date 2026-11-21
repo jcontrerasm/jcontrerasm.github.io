@@ -1,9 +1,13 @@
 ---
-title: "GitHub Copilot Fusion: when you stop picking the model and start governing the pool"
+title: "Copilot Fusion (Part 1): when you stop picking the model and start governing the pool"
 description: "What Copilot Fusion is, how it orchestrates several models per task, and what changes for those of us leading AI adoption in the SDLC: cost, metrics and governance."
 pubDate: 2026-11-20
 lang: en
 status: draft
+series:
+  id: copilot-fusion
+  name: "Copilot Fusion"
+  part: 1
 tags: ["AI", "GitHub Copilot", "DevSecOps", "Metrics"]
 ---
 
@@ -90,67 +94,12 @@ If Max doesn't improve the acceptance rate over Standard for a given task type, 
 
 In a [previous article](/en/blog/copilot-agent-mode-dependabot/) I described how, while remediating vulnerabilities with Copilot agent mode, developers went from writing the fix to evaluating the AI's proposal. Fusion takes that shift further: now they don't even pick the tool, only how much effort to invest. One detail to keep in mind: if Fusion discards a draft, the file edits that draft already made are not rolled back. Reviewing the diff is still on us.
 
-## How to set Fusion as the default in GitHub Copilot
-
-The default configuration is set by enterprise admins in two steps: which models Fusion can use, and which model and effort level every new conversation starts with.
-
-### 1. Choose the models Fusion can use
-
-From your enterprise settings on GitHub:
-
-1. At the top of the page, click **AI controls**.
-2. In the sidebar, click **Copilot**.
-3. Under **Models**, click **Configure Copilot Fusion models**.
-4. Set a status for each model in the list.
-
-This control lets you disable a model for Fusion only, without taking it away from everyone else. A model enabled here is only used if the enterprise's other model policies also allow it, so this is the place to align the pool with security and data approvals.
-
-### 2. Set Fusion as the default model with enterprise managed settings
-
-With *enterprise managed settings*, Fusion becomes the default model for new conversations. There are two keys:
-
-- `model`: sets the default model for new conversations.
-- `fusionTier`: sets the default effort level when the model is `fusion`. It accepts `"standard"`, `"high"`, `"max"` or `"unmanaged"`.
-
-This is the configuration I recommend to start with: Fusion by default, at Standard, letting each person raise the level when the task needs it.
-
-```json
-{
-  "model": "fusion",
-  "fusionTier": { "overridable": "standard" }
-}
-```
-
-If a team needs a different default (for example, a platform team working on large multi-repo changes), it can override it in its team settings file:
-
-```json
-{
-  "fusionTier": "high"
-}
-```
-
-If the team doesn't set `fusionTier`, the enterprise value applies. One important detail: if you set `fusionTier` to a plain value (for example `"standard"`, without `overridable`), the level is locked and neither users nor repositories can change it. Use it only if you truly need strict cost control.
-
-### 3. Minimum client versions
-
-These settings require recent client versions:
-
-| Client | Minimum version |
-| --- | --- |
-| VS Code | 1.144.0 |
-| Copilot CLI | 1.0.104-3 |
-| GitHub Copilot app | 1.1.33-4 |
-
-For developers, the change shows up in the model picker: **Copilot Fusion** appears with its levels **Fusion Standard**, **Fusion High** and **Fusion Max**. Without enterprise configuration, anyone can still pick it manually from that same picker.
-
-> The full guide to creating the settings file is in GitHub's [enterprise managed settings](https://docs.github.com/copilot/reference/enterprise-administrators/enterprise-managed-settings) documentation.
-
 ## How I'd roll it out
 
 If I were starting today, I'd follow these steps:
 
 1. **Review the list of eligible models** for Fusion and align it with the organization's security and data policies.
-2. **Set Fusion at Standard as the default** (as in the previous section) and keep High and Max as explicit choices.
+2. **Set Fusion at Standard as the default** and keep High and Max as explicit choices. I explain how to configure it in [part two](/en/blog/copilot-fusion-configuracion/).
 3. **Configure budgets and alerts** before opening it to every team.
 4. **Run a pilot with baseline metrics** (cost per PR, acceptance, rework) on two or three teams.
 5. **Compare against current usage** before scaling. The temporary launch discount can skew the cost picture in the first weeks.
