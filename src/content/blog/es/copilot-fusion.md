@@ -3,7 +3,7 @@ title: "Copilot Fusion (parte 1): cuando dejas de elegir el modelo y empiezas a 
 description: "Qué es Copilot Fusion, cómo orquesta varios modelos por tarea y qué cambia para quienes lideramos la adopción de IA en el SDLC: costos, métricas y gobierno."
 pubDate: 2026-11-20
 lang: es
-status: draft
+status: published
 series:
   id: copilot-fusion
   name: "Copilot Fusion"
@@ -13,7 +13,7 @@ tags: ["IA", "GitHub Copilot", "DevSecOps", "Métricas"]
 
 ![Ilustración de Copilot Fusion: un orquestador que enruta una tarea hacia varios modelos y devuelve una sola respuesta](/images/blog/copilot-fusion/portada.png)
 
-Durante el último año, una de las preguntas que más he escuchado de los equipos es: *"¿Qué modelo debería usar para esto?"*. Cada desarrollador terminaba con su propia receta: un modelo para el día a día, otro "para cuando la cosa se pone difícil" y uno más caro que se reservaba para emergencias. Para quienes lideramos la adopción de IA en el SDLC, eso significaba algo incómodo: el costo y la calidad dependían de una decisión manual que nadie estaba midiendo.
+Durante los últimos meses, una de las preguntas que más he escuchado de los equipos es: *"¿Qué modelo debería usar para esto?"*. Cada desarrollador terminaba con su propia receta: un modelo para el día a día, otro "para cuando la cosa se pone difícil" y uno más caro que se reservaba para emergencias. Para quienes lideramos la adopción de IA en el SDLC, eso significaba algo incómodo: el costo y la calidad dependían de una decisión manual que nadie estaba midiendo.
 
 En GitHub Universe (28 de octubre de 2026), GitHub presentó **Copilot Fusion**, y lo interesante es que ataca justamente ese problema.
 
@@ -94,7 +94,11 @@ Si Max no mejora la tasa de aceptación frente a Standard en un tipo de tarea, e
 
 ### 3. El rol del desarrollador sigue moviéndose hacia la evaluación
 
-En un [artículo anterior](/es/blog/copilot-agent-mode-dependabot/) conté cómo, al remediar vulnerabilidades con Copilot en modo agente, el desarrollador pasó de escribir la solución a evaluar la propuesta de la IA. Fusion profundiza ese cambio: ahora tampoco elige la herramienta, solo cuánto esfuerzo invertir. Hay un detalle a tener en cuenta: si Fusion descarta un borrador, las ediciones de archivos que ese borrador ya hizo no se deshacen. La revisión del diff sigue siendo responsabilidad nuestra.
+Con los agentes de IA, el desarrollador ya venía pasando de escribir la solución a evaluar la propuesta de la IA. Fusion profundiza ese cambio: ahora tampoco elige la herramienta, solo cuánto esfuerzo invertir.
+
+Hay un detalle a tener en cuenta. En modo agente, el modelo económico de Cascade no solo propone texto: edita archivos de verdad. Si el juez decide que ese borrador no es suficiente y escala al modelo potente, Fusion deja de usar el borrador como respuesta, pero **los cambios que ya hizo en los archivos no se revierten**. El modelo potente trabaja sobre ese código ya modificado, y el resultado final puede mezclar ambos intentos: un archivo creado que nadie usa, una función a medio cambiar, un import sobrante o código de depuración.
+
+Por eso, leer la respuesta final en el chat no basta. Fusion decide qué modelo trabaja, pero no garantiza que el estado de los archivos quede limpio. Antes de aceptar o hacer commit, hay que revisar el diff completo: esa revisión sigue siendo responsabilidad del desarrollador.
 
 ## Cómo lo adoptaría
 

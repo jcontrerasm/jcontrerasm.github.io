@@ -1,0 +1,121 @@
+---
+/**
+ * Escribe `text` letra por letra y, al terminar, deja un guion bajo palpitando.
+ * El texto completo siempre está disponible para lectores de pantalla y buscadores,
+ * y sin JavaScript (o con `prefers-reduced-motion`) se muestra completo de inmediato.
+ */
+interface Props {
+  text: string;
+  /** Milisegundos por carácter. */
+  speed?: number;
+  /** Milisegundos antes de empezar a escribir. */
+  delay?: number;
+}
+
+const { text, speed = 70, delay = 300 } = Astro.props;
+---
+
+<span class="typewriter" data-typewriter data-text={text} data-speed={speed} data-delay={delay}>
+  <span class="typewriter-sr">{text}</span>
+  <span class="typewriter-stack" aria-hidden="true">
+    <span class="typewriter-ghost">{text}<span class="typewriter-caret">_</span></span>
+    <span class="typewriter-live"
+      ><span class="typewriter-typed">{text}</span><span class="typewriter-caret is-blinking"
+        >_</span
+      ></span
+    >
+  </span>
+</span>
+
+<style>
+  .typewriter-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* El texto "fantasma" reserva el espacio final para evitar saltos de layout. */
+  .typewriter-stack {
+    display: inline-grid;
+  }
+
+  .typewriter-ghost,
+  .typewriter-live {
+    grid-area: 1 / 1;
+  }
+
+  .typewriter-ghost {
+    visibility: hidden;
+  }
+
+  .typewriter-caret {
+    display: inline-block;
+    margin-left: 0.04em;
+  }
+
+  .typewriter-caret.is-blinking {
+    animation: typewriter-blink 1.1s steps(1, end) infinite;
+  }
+
+  @keyframes typewriter-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter-caret.is-blinking {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  function initTypewriters() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll<HTMLElement>('[data-typewriter]').forEach((root) => {
+      if (root.dataset.typewriterReady) return;
+      root.dataset.typewriterReady = 'true';
+
+      const text = root.dataset.text ?? '';
+      const speed = Number(root.dataset.speed) || 70;
+      const delay = Number(root.dataset.delay) || 0;
+      const typed = root.querySelector<HTMLElement>('.typewriter-typed');
+      const caret = root.querySelector<HTMLElement>('.typewriter-live .typewriter-caret');
+      if (!typed || !caret || reduceMotion) return;
+
+      const chars = Array.from(text);
+      let index = 0;
+      typed.textContent = '';
+      // Mientras escribe, el cursor queda fijo; palpita solo al terminar.
+      caret.classList.remove('is-blinking');
+
+      const step = () => {
+        index += 1;
+        typed.textContent = chars.slice(0, index).join('');
+        if (index < chars.length) {
+          window.setTimeout(step, speed);
+        } else {
+          caret.classList.add('is-blinking');
+        }
+      };
+
+      window.setTimeout(step, delay);
+    });
+  }
+
+  initTypewriters();
+  document.addEventListener('astro:page-load', initTypewriters);
+</script>

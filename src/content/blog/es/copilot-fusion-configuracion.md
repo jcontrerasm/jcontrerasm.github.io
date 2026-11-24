@@ -1,9 +1,9 @@
 ---
 title: "Copilot Fusion (parte 2): cómo configurarlo por defecto en tu organización"
 description: "Guía práctica para administradores: qué modelos puede usar Fusion, cómo dejarlo como modelo por defecto con enterprise managed settings y qué versiones de cliente necesitas."
-pubDate: 2026-11-20
+pubDate: 2026-11-23
 lang: es
-status: draft
+status: published
 series:
   id: copilot-fusion
   name: "Copilot Fusion"

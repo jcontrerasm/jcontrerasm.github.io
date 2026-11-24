@@ -3,7 +3,7 @@ title: "RAG from Scratch (Part 1): Vectors, Embeddings and Vector Databases"
 description: "The fundamentals of RAG explained step by step: what vectors and embeddings are, how a vector database works and how a query flows from the user all the way to the LLM's answer."
 pubDate: 2025-11-13
 lang: en
-status: published
+status: draft
 series:
   id: rag-desde-cero
   name: "RAG from Scratch"

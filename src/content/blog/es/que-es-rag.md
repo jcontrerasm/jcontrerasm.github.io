@@ -3,7 +3,7 @@ title: "RAG desde cero (parte 1): vectores, embeddings y bases de datos vectoria
 description: "Los fundamentos de RAG explicados paso a paso: qué son los vectores y los embeddings, cómo funciona una base de datos vectorial y cómo fluye una consulta desde el usuario hasta la respuesta del LLM."
 pubDate: 2025-11-13
 lang: es
-status: published
+status: draft
 series:
   id: rag-desde-cero
   name: "RAG desde cero"

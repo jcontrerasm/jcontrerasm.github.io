@@ -184,4 +184,34 @@ const draftLabel = lang === 'es' ? 'Borrador · no se publicará' : 'Draft · wi
   .body :global(h2) {
     margin-top: 2em;
   }
+
+  /* Tablas en markdown: bordes, encabezado y scroll horizontal en móvil */
+  .body :global(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .body :global(th),
+  .body :global(td) {
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .body :global(th) {
+    background: var(--color-surface-raised);
+    color: var(--color-text-primary);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .body :global(tbody tr:nth-child(even)) {
+    background: var(--color-surface-raised);
+  }
 </style>
