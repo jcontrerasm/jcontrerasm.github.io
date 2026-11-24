@@ -5,7 +5,7 @@
       "url": [
         "http://localhost/es/index.html",
         "http://localhost/en/blog/index.html",
-        "http://localhost/es/blog/que-es-rag/index.html",
+        "http://localhost/es/blog/copilot-fusion-configuracion/index.html",
         "http://localhost/en/blog/antipatron-indices-como-clave-en-react/index.html"
       ],
       "numberOfRuns": 1,

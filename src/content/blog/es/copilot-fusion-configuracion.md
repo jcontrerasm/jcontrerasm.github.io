@@ -26,6 +26,12 @@ Desde la configuración de la empresa en GitHub:
 3. En la sección **Models**, haz clic en **Configure Copilot Fusion models**.
 4. Define el estado de cada modelo de la lista.
 
+![Sección Models de AI controls en GitHub, con la opción Configure Copilot Fusion models al final de la lista](/images/blog/copilot-fusion-configuracion/fusion-models-seccion.png)
+
+En la pantalla de Fusion, cada modelo tiene su estado en la columna **Copilot Fusion choice**. Los modelos marcados como **Required for Copilot Fusion Max** son los que necesita el nivel Max: si deshabilitas cualquiera de ellos, GitHub muestra un aviso y Fusion Max deja de estar disponible para toda la empresa.
+
+![Pantalla Configure Copilot Fusion models con la lista de modelos, su proveedor, su estado y el aviso de que Fusion Max no estará disponible](/images/blog/copilot-fusion-configuracion/fusion-models-lista.png)
+
 Este control permite deshabilitar un modelo solo para Fusion, sin quitárselo al resto de los usuarios. Un modelo habilitado aquí solo se usa si las demás políticas de modelos de la empresa también lo permiten, así que este es el lugar para alinear el pool con las aprobaciones de seguridad y datos.
 
 ## 2. Definir Fusion como modelo por defecto con enterprise managed settings
@@ -35,7 +41,7 @@ Con los *enterprise managed settings*, Fusion queda como modelo por defecto para
 - `model`: define el modelo por defecto de las conversaciones nuevas.
 - `fusionTier`: define el nivel de esfuerzo por defecto cuando el modelo es `fusion`. Acepta `"standard"`, `"high"`, `"max"` o `"unmanaged"`.
 
-Esta es la configuración que recomiendo para empezar: Fusion por defecto, en Standard, permitiendo que cada persona suba el nivel cuando la tarea lo necesite.
+Esta es la configuración que recomiendo para empezar: Fusion por defecto, en Standard, permitiendo que un equipo defina otro nivel cuando su trabajo lo necesite.
 
 ```json
 {
@@ -52,7 +58,7 @@ Si un equipo necesita otro nivel por defecto (por ejemplo, un equipo de platafor
 }
 ```
 
-Si el equipo no define `fusionTier`, se aplica el valor de la empresa. Según la documentación, cualquier valor distinto de `"unmanaged"` restringe el nivel frente a cambios de usuarios y repositorios. Antes de desplegarlo, prueba en un equipo piloto si las personas pueden cambiar el nivel desde el selector, para confirmar que obtienes el comportamiento que buscas.
+Si el equipo no define `fusionTier`, se aplica el valor de la empresa. Conviene tener claro quién puede cambiar el nivel. Con cualquier valor distinto de `"unmanaged"`, ni los usuarios ni los repositorios pueden cambiarlo: la decisión queda en manos de la empresa y de los equipos. Con `overridable`, cada equipo puede definir su propio nivel en su archivo; con un valor simple, el nivel queda fijo para todos. Si no defines `fusionTier`, cada persona elige el nivel desde el selector, como se ve en la captura de la sección 3.
 
 ## 3. Versiones mínimas de los clientes
 
@@ -66,12 +72,22 @@ Estas configuraciones requieren versiones recientes de los clientes:
 
 Para el desarrollador, el cambio se ve en el selector de modelos: aparece **Copilot Fusion** con sus niveles **Fusion Standard**, **Fusion High** y **Fusion Max**. Sin configuración de la empresa, cada persona puede elegirlo manualmente desde ese mismo selector.
 
+En el chat de VS Code, al abrir el selector, aparece el panel de **Copilot Fusion** con el aviso de que la organización lo definió como modelo por defecto y, debajo, la opción **Effort Level** para elegir el nivel.
+
+Lo que se ve en ese selector depende de los modelos que habilitaste en el paso 1:
+
+- **Max** es el único nivel con modelos requeridos, los que aparecen marcados como **Required for Copilot Fusion Max**. Si deshabilitas cualquiera de ellos, la opción **Max** aparece desactivada, como en esta captura.
+- **Standard** y **High** no dependen de modelos marcados como requeridos, así que siguen disponibles aunque Max no lo esté.
+- Si ninguno de los modelos que usa Fusion está disponible, **Copilot Fusion** desaparece por completo del selector.
+
+![Panel de Copilot Fusion en el chat de VS Code, con el aviso de que la organización lo definió por defecto y el selector Effort Level con Standard elegido y Max desactivado](/images/blog/copilot-fusion-configuracion/fusion-models-effort-level.png)
+
 > La guía completa para crear el archivo de configuración está en la documentación de [enterprise managed settings](https://docs.github.com/copilot/reference/enterprise-administrators/enterprise-managed-settings) de GitHub.
 
 ## Conclusiones
 
-Dejar Fusion por defecto es una configuración corta, pero tiene implicancias de gobierno: el pool de modelos permitido se convierte en un control de seguridad, y el nivel de esfuerzo por defecto se convierte en una palanca de costos. Mi recomendación es empezar con Standard, dejar que cada equipo justifique un nivel mayor y tratar este archivo de configuración como cualquier otro cambio de infraestructura: versionado, revisado y medido.
+Dejar Fusion por defecto es una configuración corta, pero tiene implicancias de gobierno: el pool de modelos permitido se convierte en un control de seguridad, y el nivel de esfuerzo por defecto se convierte en una palanca de costos. Mi recomendación es empezar con Standard, dejar que cada equipo justifique un nivel mayor y tratar este archivo de configuración como cualquier otro cambio de infraestructura: versionado, revisado y medido. Y una vez que el archivo existe, vale la pena usarlo para algo más que Fusion: permisos de los agentes, servidores MCP, plugins y telemetría pueden gobernarse desde el mismo lugar. Lo explicaré en detalle en un próximo artículo.
 
 Muchas gracias por el tiempo y espero que este artículo haya sido de ayuda.
 
-**Fuentes:** [documentación de GitHub sobre Copilot Fusion](https://docs.github.com/copilot/concepts/models/copilot-fusion), [enterprise managed settings](https://docs.github.com/copilot/reference/enterprise-administrators/enterprise-managed-settings).
+**Fuentes:** [documentación de GitHub sobre Copilot Fusion](https://docs.github.com/copilot/concepts/models/copilot-fusion), [enterprise managed settings](https://docs.github.com/copilot/reference/enterprise-administrators/enterprise-managed-settings), [primeros pasos con managed settings](https://docs.github.com/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/get-started).
