@@ -1,9 +1,9 @@
 ---
 title: "Copilot Fusion (Part 2): How to Set It as the Default in Your Organization"
 description: "A hands-on guide for admins: which models Fusion can use, how to make it the default model with enterprise managed settings, and which client versions you need."
-pubDate: 2026-11-20
+pubDate: 2026-11-23
 lang: en
-status: draft
+status: published
 series:
   id: copilot-fusion
   name: "Copilot Fusion"

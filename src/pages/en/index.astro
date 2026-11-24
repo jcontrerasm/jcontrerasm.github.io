@@ -6,6 +6,7 @@ import CertificationCard from '../../components/CertificationCard.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
 import DevSecOpsPipeline from '../../components/DevSecOpsPipeline.astro';
 import PhotoCarousel from '../../components/PhotoCarousel.astro';
+import TypewriterText from '../../components/TypewriterText.astro';
 import { getCollection } from 'astro:content';
 import { isPublished } from '../../utils/posts';
 import { SITE } from '../../config';
@@ -87,7 +88,7 @@ const certifications = [
       <img class="hero-photo" src="/images/profile.jpeg" alt={SITE.name} width="220" height="220" />
       <div class="hero-text">
         <p class="eyebrow hero-eyebrow">DevSecOps Architect</p>
-        <h1 class="hero-title">{SITE.fullName}</h1>
+        <h1 class="hero-title"><TypewriterText text={SITE.fullName} /></h1>
         <p class="lede">
           DevSecOps &amp; AI Architect | Scaling the SDLC with AI Agents | Innovation Mentor &amp;
           Speaker

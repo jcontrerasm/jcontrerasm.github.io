@@ -3,7 +3,7 @@ title: "Copilot Fusion (Part 1): when you stop picking the model and start gover
 description: "What Copilot Fusion is, how it orchestrates several models per task, and what changes for those of us leading AI adoption in the SDLC: cost, metrics and governance."
 pubDate: 2026-11-20
 lang: en
-status: draft
+status: published
 series:
   id: copilot-fusion
   name: "Copilot Fusion"
@@ -13,7 +13,7 @@ tags: ["AI", "GitHub Copilot", "DevSecOps", "Metrics"]
 
 ![Copilot Fusion illustration: an orchestrator routing a task to several models and returning a single answer](/images/blog/copilot-fusion/portada.png)
 
-Over the past year, one of the questions I've heard most from teams is: *"Which model should I use for this?"*. Every developer ended up with their own recipe: one model for everyday work, another "for when things get hard," and a pricier one saved for emergencies. For those of us leading AI adoption in the SDLC, that meant something uncomfortable: cost and quality depended on a manual decision nobody was measuring.
+Over the past few months, one of the questions I've heard most from teams is: *"Which model should I use for this?"*. Every developer ended up with their own recipe: one model for everyday work, another "for when things get hard," and a pricier one saved for emergencies. For those of us leading AI adoption in the SDLC, that meant something uncomfortable: cost and quality depended on a manual decision nobody was measuring.
 
 At GitHub Universe (October 28, 2026), GitHub introduced **Copilot Fusion**, and what makes it interesting is that it goes straight at that problem.
 
@@ -94,7 +94,11 @@ If Max doesn't improve the acceptance rate over Standard for a given task type, 
 
 ### 3. The developer's role keeps shifting toward evaluation
 
-In a [previous article](/en/blog/copilot-agent-mode-dependabot/) I described how, while remediating vulnerabilities with Copilot agent mode, developers went from writing the fix to evaluating the AI's proposal. Fusion takes that shift further: now they don't even pick the tool, only how much effort to invest. One detail to keep in mind: if Fusion discards a draft, the file edits that draft already made are not rolled back. Reviewing the diff is still on us.
+With AI agents, developers were already shifting from writing the fix to evaluating the AI's proposal. Fusion takes that shift further: now they don't even pick the tool, only how much effort to invest.
+
+There's one detail to keep in mind. In agent mode, Cascade's cheaper model doesn't just propose text: it actually edits files. If the judge decides that draft isn't good enough and escalates to the stronger model, Fusion stops using the draft as the answer, but **the changes it already made to the files are not rolled back**. The stronger model works on top of that already-modified code, and the final result can mix both attempts: a file nobody uses, a half-changed function, a leftover import, or debug code.
+
+That's why reading the final answer in the chat isn't enough. Fusion decides which model does the work, but it doesn't guarantee the files end up clean. Before accepting or committing, review the full diff: that review is still the developer's responsibility.
 
 ## How I'd roll it out
 
